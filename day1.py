@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+df = pd.read_csv(r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
 print(df.head())
 
 # for missing issues 
@@ -19,4 +19,26 @@ str_cols = df.select_dtypes(include='object').columns
 for col in str_cols:
     df[col] = df[col].str.strip()
 
-     
+
+#Checking for duplicate rows
+duplicate_rows = df.duplicated().sum()
+print(f"\nDuplicate Rows: {duplicate_rows}")
+
+#checking for duplicate customer id
+duplicate_customerid = df["customerID"].duplicated().sum()
+print(f"Duplicate customer IDs: {duplicate_customerid}")
+
+#remove duplicate rows
+if duplicate_rows > 0:
+    df.drop_duplicates(inplace=True)
+    print(f"{duplicate_rows} duplicate rows removed successfully")
+else:
+    print("No duplicate rows.")
+
+#duplicate customer id still exists or not
+duplicate_customerid = df["customerID"].duplicated().sum()
+
+if duplicate_customerid>0:
+    print(f"{duplicate_customerid} duplicate customer ids still exist.")
+else:
+    print ("No duplicate customer id")
