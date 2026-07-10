@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-df = pd.read_csv(r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
+df = pd.read_csv(r"G:\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
 print(df.head())
 
 # for missing issues 
@@ -42,3 +42,11 @@ if duplicate_customerid>0:
     print(f"{duplicate_customerid} duplicate customer ids still exist.")
 else:
     print ("No duplicate customer id")
+
+#--------cleaning senior citizen column-----------
+print("\n values before cleaning senior citizen column:\n", df['SeniorCitizen'].unique())
+# convert 0 and 1 to No and Yes
+df["SeniorCitizen"]= df["SeniorCitizen"].replace({0: "No", 1: "Yes"})
+print("\n values after cleaning senior citizen column:\n", df['SeniorCitizen'].unique())
+
+
