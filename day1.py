@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-df = pd.read_csv(r"G:\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
+df = pd.read_csv(r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
 print(df.head())
 
 # for missing issues 
