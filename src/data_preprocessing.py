@@ -1,18 +1,25 @@
+#import libraries
 import pandas as pd
 from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.preprocessing import StandardScaler
 
-
-#Load Dataset:
+ 
+# Load Dataset
 def load_data(file_path):
-    df = pd.read_csv(file_path)
-    print("\nDATA LOADED SUCCESSFULLY!")
-    return df
+    try:
+        df = pd.read_csv(file_path)
+        print("\nDataset loaded successfully.")
+        return df
+
+    except FileNotFoundError:
+        print("\nERROR: Dataset file not found!")
+        print(f"Please check the file path:\n{file_path}")
+        return None
 
 
 #Inspect Dataset:
 def data_info(df):
-    print("\n")
-    print("DATASET INFORMATION:")
+    print("\nDATASET INFORMATION:")
     
     print("\nShape of Dataset:")
     print(df.shape)
@@ -33,6 +40,21 @@ def data_info(df):
     print(df.head())
 
 
+#cleaning dataset:
+def clean_data(df):
+
+    print("\nDATA CLEANING")
+
+    # Convert TotalCharges to numeric
+    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"].replace(" ", pd.NA),errors="coerce")
+
+    # Fill missing values
+    df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
+
+    print("\nDataset cleaned successfully!")
+    return df
+
+
 #Train-Test split:
 def data_split(df):
     print("\nTRAIN-TEST SPLIT:\n")
@@ -47,37 +69,71 @@ def data_split(df):
         random_state=42,
         stratify=y
     )
-
     print(f"Training Samples : {X_train.shape[0]}")
     print(f"Test Samples : {X_test.shape[0]}")
     return X_train, X_test, y_train, y_test
 
 
+#Scaling dataset
+def data_scaling(X_train, X_test):
+
+    X_train = X_train.copy()
+    X_test = X_test.copy()
+
+    numerical_columns = [
+        col for col in
+        ["tenure", "MonthlyCharges", "TotalCharges"]
+        if col in X_train.columns
+    ]
+
+    scaler = StandardScaler()
+
+    X_train[numerical_columns] = scaler.fit_transform(
+        X_train[numerical_columns]
+    )
+
+    X_test[numerical_columns] = scaler.transform(
+        X_test[numerical_columns]
+    )
+
+    print("\nDATA SCALING")
+
+    print("\nScaled Columns:")
+    print(numerical_columns)
+
+    return X_train, X_test, scaler
+
+
 #Cross validation:
 def cross_validation():
-    print("\nCROSS VALIDATION:\n")
+    print("\nCROSS VALIDATION:")
 
     cvalid = StratifiedKFold(
         n_splits=5,
         shuffle=True,
         random_state=42)
     
-    print ("Cross Validation created successfully!")
+    print ("\nCross Validation created successfully!")
     return cvalid
-
 
 
 #Main function:
 def main():
 
-    #started
+    #start
     file_path = r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
 
-    #load dataset
+    # Load dataset
     df = load_data(file_path)
+
+    if df is None:
+        return
 
     #inspect dataset
     data_info(df)
+
+    #cleaning dataset
+    df = clean_data(df)
 
    #train-test split
     X_train, X_test, y_train, y_test = data_split(df)
@@ -86,13 +142,18 @@ def main():
     print(f"\ny_train Shape: {y_train.shape}")
     print(f"\ny_test Shape : {y_test.shape}")
 
+    #data Scaling
+    X_train, X_test, scaler = data_scaling(
+        X_train,
+        X_test
+    )
+
     #cross validation
     cvalid = cross_validation()
     print(cvalid)
 
-    #completed
+    #complete
     print("\nDATA PREPARATION COMPLETED!")
-
 
 
 if __name__ == "__main__":
