@@ -6,6 +6,9 @@ from sklearn.preprocessing import StandardScaler
  
 # Load Dataset
 def load_data(file_path):
+    """
+    Load the dataset from a CSV file.
+    """
     try:
         df = pd.read_csv(file_path)
         print("\nDataset loaded successfully.")
@@ -19,6 +22,9 @@ def load_data(file_path):
 
 #Inspect Dataset:
 def data_info(df):
+    """
+    Display basic information about the dataset.
+    """
     print("\nDATASET INFORMATION:")
     
     print("\nShape of Dataset:")
@@ -42,7 +48,9 @@ def data_info(df):
 
 #cleaning dataset:
 def clean_data(df):
-
+    """
+    Clean and prepare the dataset for preprocessing.
+    """
     print("\nDATA CLEANING")
 
     # Convert TotalCharges to numeric
@@ -57,6 +65,9 @@ def clean_data(df):
 
 #Train-Test split:
 def data_split(df):
+    """
+    Split the dataset into training and testing sets.
+    """
     print("\nTRAIN-TEST SPLIT:\n")
 
     X = df.drop(["customerID", "Churn"], axis=1)
@@ -76,7 +87,9 @@ def data_split(df):
 
 #Scaling dataset
 def data_scaling(X_train, X_test):
-
+    """
+    Scale numerical features using StandardScaler.
+    """
     X_train = X_train.copy()
     X_test = X_test.copy()
 
@@ -106,6 +119,9 @@ def data_scaling(X_train, X_test):
 
 #Cross validation:
 def cross_validation():
+    """
+    Create a Stratified K-Fold cross-validation object.
+    """
     print("\nCROSS VALIDATION:")
 
     cvalid = StratifiedKFold(
@@ -119,8 +135,9 @@ def cross_validation():
 
 #Main function:
 def main():
-
-    #start
+    """
+    Run the complete data preprocessing pipeline.
+    """
     file_path = r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
 
     # Load dataset
