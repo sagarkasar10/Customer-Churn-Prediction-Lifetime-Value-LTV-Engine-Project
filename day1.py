@@ -48,5 +48,3 @@ print("\n values before cleaning senior citizen column:\n", df['SeniorCitizen'].
 # convert 0 and 1 to No and Yes
 df["SeniorCitizen"]= df["SeniorCitizen"].replace({0: "No", 1: "Yes"})
 print("\n values after cleaning senior citizen column:\n", df['SeniorCitizen'].unique())
-
-
