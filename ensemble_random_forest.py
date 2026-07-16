@@ -17,3 +17,10 @@ y_train.to_csv("y_train.csv", index=False)
 y_test.to_csv("y_test.csv", index=False)
 
 print("Files saved:", X_train.shape, X_test.shape)
+
+import matplotlib.pyplot as plt
+
+importances = pd.Series(rf.feature_importances_, index=X_train.columns)
+importances = importances.sort_values(ascending=False)
+
+print("\nTop 10 Important Features:\n", importances.head(10))
