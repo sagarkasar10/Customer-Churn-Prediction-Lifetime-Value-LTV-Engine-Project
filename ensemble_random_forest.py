@@ -24,3 +24,11 @@ rf = RandomForestClassifier(random_state=42)
 rf.fit(X_train, y_train)
 print("Baseline Random Forest trained successfully")
 
+
+
+# ---- 2. Feature importance extraction ----
+importances = pd.Series(rf.feature_importances_, index=X_train.columns)
+importances = importances.sort_values(ascending=False)
+
+print("\nTop 10 Important Features:")
+print(importances.head(10))
