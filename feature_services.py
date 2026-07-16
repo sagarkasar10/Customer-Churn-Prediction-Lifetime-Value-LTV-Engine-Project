@@ -32,3 +32,46 @@ def total_services_count(df):
     df["TotalServices"] = temp.sum(axis=1)
 
     return df
+
+def service_complexity_score(df):
+
+    weights = {
+        "PhoneService":1,
+        "MultipleLines":1,
+        "OnlineSecurity":3,
+        "OnlineBackup":2,
+        "DeviceProtection":2,
+        "TechSupport":3,
+        "StreamingTV":1,
+        "StreamingMovies":1
+    }
+
+    score = 0
+
+    for col, weight in weights.items():
+
+        score += (
+            df[col]
+            .replace({
+                "Yes":1,
+                "No":0,
+                "No internet service":0,
+                "No phone service":0
+            })
+            * weight
+        )
+
+    df["ServiceComplexityScore"] = score
+
+    return df
+
+
+def create_service_features(df):
+
+    df = handle_missing_service_data(df)
+
+    df = total_services_count(df)
+
+    df = service_complexity_score(df)
+
+    return df
