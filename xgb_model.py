@@ -23,10 +23,23 @@ def load_and_split_data(file_path):
 
     return x_train, x_test, y_train, y_test
 
+def train_xgboost_model(x_train, y_train):
+    # Initialize the XGBoost classifier
+    xgb_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+
+    # Train the model
+    xgb_model.fit(x_train, y_train)
+
+    print("Model trained successfully!")
+
+    return xgb_model
+
 if __name__ == "__main__":
     file_path = r"G:\WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
     x_train, x_test, y_train, y_test = load_and_split_data(file_path)
-    
+    xgboost_model = train_xgboost_model(x_train, y_train)
+
+
 
 
 
