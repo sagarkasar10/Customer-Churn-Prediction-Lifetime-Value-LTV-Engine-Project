@@ -1,8 +1,8 @@
 #import libraries
 import pandas as pd
+from pathlib import Path
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
-
  
 # Load Dataset
 def load_data(file_path):
@@ -138,11 +138,14 @@ def main():
     """
     Run the complete data preprocessing pipeline.
     """
-    file_path = r"C:\Users\TIYA\Desktop\ZAALIMA\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
+
+    # Locate project root
+    project_root = Path(__file__).resolve().parent.parent
+    file_path = project_root / "WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
+
 
     # Load dataset
     df = load_data(file_path)
-
     if df is None:
         return
 
