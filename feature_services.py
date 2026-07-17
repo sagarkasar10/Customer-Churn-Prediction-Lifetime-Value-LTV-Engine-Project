@@ -75,3 +75,29 @@ def create_service_features(df):
     df = service_complexity_score(df)
 
     return df
+
+
+def create_tenure_cohorts(df):
+    """
+    Groups customers based on tenure.
+    """
+
+    bins = [0, 12, 24, 48, 60, np.inf]
+
+    labels = [
+        "0-12 Months",
+        "13-24 Months",
+        "25-48 Months",
+        "49-60 Months",
+        "60+ Months"
+    ]
+
+    df["TenureCohort"] = pd.cut(
+        df["tenure"],
+        bins=bins,
+        labels=labels,
+        include_lowest=True
+    )
+
+    return df
+
