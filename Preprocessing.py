@@ -48,3 +48,15 @@ print("\n values before cleaning senior citizen column:\n", df['SeniorCitizen'].
 # convert 0 and 1 to No and Yes
 df["SeniorCitizen"]= df["SeniorCitizen"].replace({0: "No", 1: "Yes"})
 print("\n values after cleaning senior citizen column:\n", df['SeniorCitizen'].unique())
+
+# Checking for missing values in 'TotalCharges' column
+df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors = 'coerce')
+
+# Check for missing values
+print("Missing values in TotalCharges:", df['TotalCharges'].isnull().sum())
+
+df['TotalCharges'] = df['TotalCharges'].fillna(0)
+
+# Check for missing values after filling
+print("Missing values in TotalCharges after filling:", df['TotalCharges'].isnull().sum())
+
