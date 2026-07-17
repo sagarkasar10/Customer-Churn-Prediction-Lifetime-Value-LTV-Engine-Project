@@ -23,7 +23,7 @@ grid_search = GridSearchCV(
 from sklearn.model_selection import train_test_split
 
 
-df = pd.read_csv(r"C:\Users\SA\Downloads\zaalima\Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project\WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
+df = pd.read_csv(r"C:WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
 print(df.dtypes)
 X = df.drop(columns=['customerID', 'Churn'])
 y = df['Churn']
