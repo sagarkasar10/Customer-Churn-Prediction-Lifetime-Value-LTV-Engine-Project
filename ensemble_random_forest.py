@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
@@ -30,5 +31,13 @@ print("Baseline Random Forest trained successfully")
 importances = pd.Series(rf.feature_importances_, index=X_train.columns)
 importances = importances.sort_values(ascending=False)
 
+
 print("\nTop 10 Important Features:")
 print(importances.head(10))
+
+plt.figure(figsize=(8, 6))
+importances.head(15).sort_values().plot(kind="barh")
+plt.title("Random Forest - Top Feature Importances")
+plt.xlabel("Importance")
+plt.tight_layout()
+plt.show()
