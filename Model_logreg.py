@@ -75,4 +75,9 @@ print("Confusion Matrix:\n", cm)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot(cmap=plt.cm.Blues)
 plt.title("Logistic Regression Confusion Matrix")
-plt.savefig("logistic_regression_confusion_matrix.png")
+# plt.savefig("logistic_regression_confusion_matrix.png")
+
+#save the best trained model
+joblib.dump(best_model, "best_logistic_regression_model.pkl")
+print("Best Logistic Regression model saved as 'best_logistic_regression_model.pkl'")
+print("Confusion matrix saved as 'logistic_regression_confusion_matrix.png")
