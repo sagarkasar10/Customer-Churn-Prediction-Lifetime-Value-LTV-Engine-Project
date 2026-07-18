@@ -33,7 +33,7 @@ def load_and_split_data(file_path):
 
 def train_xgboost_model(x_train, y_train):
     # Initialize the XGBoost classifier
-    xgb_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+    xgb_model = xgb.XGBClassifier(eval_metric='logloss', random_state=42)
 
     # Train the model
     xgb_model.fit(x_train, y_train)
@@ -48,21 +48,43 @@ def tuning_and_evaluation_xgb_model(x_test, y_test, xgb_model):
     y_pred = xgb_model.predict(x_test)
 
     # Evaluate the model
-    print("Classification Report:")
+    print("Classification Report of XGBoost Model:")
     print(classification_report(y_test, y_pred))
 
     precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
 
-    print(f"Precision: {precision:.4f}, \n Recall: {recall:.4f}, \n F1 Score: {f1:.4f}")
+    print(f"XGBoost Precision: {precision:.4f} \nXGBoost Recall: {recall:.4f} \nXGBoost F1 Score: {f1:.4f}")
+
+def initialize_shap(xgb_model, x_train):
+    # Initialize SHAP explainer
+    print("Initializing SHAP tree explainer and calculating SHAP values...")
+    explainer = shap.TreeExplainer(xgb_model)
+    shap_values = explainer.shap_values(x_train)
+
+    return explainer, shap_values
+
+
 
 
 if __name__ == "__main__":
     file_path = "WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
+
+    # 1. Load data
     x_train, x_test, y_train, y_test = load_and_split_data(file_path)
+
+    # 2. Train the model (this holds your actual trained XGBoost object)
     xgboost_model = train_xgboost_model(x_train, y_train)
-    xgb_model = tuning_and_evaluation_xgb_model(x_test, y_test, xgboost_model)
+
+    # 3. Evaluate the model 
+    tuning_and_evaluation_xgb_model(x_test, y_test, xgboost_model)
+
+    # 4. Pass the actual trained model 'xgboost_model' into SHAP
+    explainer, shap_values = initialize_shap(xgboost_model, x_train)
+
+
+
 
 
 
