@@ -101,3 +101,26 @@ def create_tenure_cohorts(df):
 
     return df
 
+
+def create_average_monthly_ratio(df):
+    """
+    Average Monthly Ratio =
+    TotalCharges / tenure
+
+    Handles customers with zero tenure.
+    """
+
+    df["TotalCharges"] = pd.to_numeric(
+        df["TotalCharges"],
+        errors="coerce"
+    )
+
+    df["AverageMonthlyRatio"] = np.where(
+        df["tenure"] == 0,
+        df["MonthlyCharges"],
+        df["TotalCharges"] / df["tenure"]
+    )
+
+    return df
+
+
