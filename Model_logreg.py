@@ -4,16 +4,14 @@ import joblib
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-
+from sklearn.preprocessing import StandardScaler
 
 
 #define the hyperparameter grid for logistic regression
 param_grid = {
     'C': [0.01, 0.1, 1, 10, 100],
     'solver': ['liblinear', 'lbfgs'],
-    'max_iter': [300,500,1000]
+    'max_iter': [300,500,1000,2000]
 }
 
 #creates the logistic regression model
@@ -25,8 +23,6 @@ grid_search = GridSearchCV(
     param_grid=param_grid,
     cv=5, scoring='f1', 
     n_jobs=-1)
-
-
 
 
 
@@ -42,11 +38,15 @@ df['TotalCharges'] = df['TotalCharges'].fillna(df['TotalCharges'].median())
 # 5. Convert all remaining text columns into numeric 0 and 1 flags
 X = df.drop(columns=['customerID', 'Churn'])
 X = pd.get_dummies(X, drop_first=True)
-print(df.head())
-print(df.dtypes)
+# print(df.head())
+# print(df.dtypes)
 y = df['Churn']
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
 #train the model using grid search
 grid_search.fit(X_train, y_train)
@@ -81,3 +81,9 @@ plt.title("Logistic Regression Confusion Matrix")
 joblib.dump(best_model, "best_logistic_regression_model.pkl")
 print("Best Logistic Regression model saved as 'best_logistic_regression_model.pkl'")
 print("Confusion matrix saved as 'logistic_regression_confusion_matrix.png")
+
+
+
+#save best hyperparameters to a text file
+print("Best hyperparameters:", grid_search.best_params_)
+print("Best cross-validation f1 score:", grid_search.best_score_)
