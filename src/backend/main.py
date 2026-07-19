@@ -3,12 +3,13 @@ This file initializes the FastAPI application and provides basic endpoints
 to verify that the backend is running. """
 
 from fastapi import FastAPI
+from backend.config import APP_NAME, APP_VERSION
 
 # Create FastAPI application
 app = FastAPI(
-    title="Customer Churn Prediction & LTV Engine",
-    description="Backend API for Customer Churn Prediction and Lifetime Value Estimation",
-    version="1.0.0"
+    title=APP_NAME,
+    description="Backend API for Customer Churn and Lifetime Value Prediction",
+    version=APP_VERSION
 )
 
 # Home endpoint
@@ -16,7 +17,7 @@ app = FastAPI(
 def home():
     #Root endpoint.
     #Returns a welcome message and backend status.
-    
+
     return {
         "project": "Customer Churn Prediction & LTV Engine",
         "status": "Backend Running",
@@ -26,11 +27,10 @@ def home():
 # Health check endpoint
 @app.get("/health")
 def health_check():
-    """
-    Health check endpoint.
+    #Health check endpoint.
+    #Used to verify that the backend service is active.
+  
 
-    Used to verify that the backend service is active.
-    """
     return {
         "status": "Healthy",
         "message": "Backend service is running successfully."
