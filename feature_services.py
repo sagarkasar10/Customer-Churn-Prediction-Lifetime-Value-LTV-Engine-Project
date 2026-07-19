@@ -123,4 +123,25 @@ def create_average_monthly_ratio(df):
 
     return df
 
+def handle_outliers(df):
+    """
+    Caps MonthlyCharges using IQR Method.
+    """
+
+    Q1 = df["MonthlyCharges"].quantile(0.25)
+    Q3 = df["MonthlyCharges"].quantile(0.75)
+
+    IQR = Q3 - Q1
+
+    lower = Q1 - (1.5 * IQR)
+    upper = Q3 + (1.5 * IQR)
+
+    df["MonthlyCharges"] = df["MonthlyCharges"].clip(
+        lower=lower,
+        upper=upper
+    )
+
+    return df
+
+
 
