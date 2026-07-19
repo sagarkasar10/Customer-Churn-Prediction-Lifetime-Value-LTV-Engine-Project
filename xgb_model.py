@@ -65,6 +65,13 @@ def initialize_shap(xgb_model, x_train):
 
     return explainer, shap_values
 
+def shap_summary_plot(shap_values, x_train):
+    # Create SHAP summary plot
+    print("Generating SHAP summary plot...")
+    shap.summary_plot(shap_values, x_train, plot_type="bar")
+    plt.show()
+    #plt.savefig("shap_summary_plot.png")
+
 
 
 
@@ -83,7 +90,8 @@ if __name__ == "__main__":
     # 4. Pass the actual trained model 'xgboost_model' into SHAP
     explainer, shap_values = initialize_shap(xgboost_model, x_train)
 
-
+    # 5. Generate SHAP summary plot
+    shap_summary_plot(shap_values, x_train)
 
 
 
