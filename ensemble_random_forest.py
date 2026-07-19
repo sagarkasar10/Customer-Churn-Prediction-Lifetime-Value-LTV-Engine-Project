@@ -1,7 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score,
+    f1_score, roc_auc_score, confusion_matrix, classification_report
+)
 
 # ---- Load raw data ----
 df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn (1).csv")
@@ -25,12 +29,9 @@ rf = RandomForestClassifier(random_state=42)
 rf.fit(X_train, y_train)
 print("Baseline Random Forest trained successfully")
 
-
-
 # ---- 2. Feature importance extraction ----
 importances = pd.Series(rf.feature_importances_, index=X_train.columns)
 importances = importances.sort_values(ascending=False)
-
 
 print("\nTop 10 Important Features:")
 print(importances.head(10))
@@ -42,21 +43,57 @@ plt.xlabel("Importance")
 plt.tight_layout()
 plt.show()
 
-def evaluate_model(model, X_test, y_test, label="Model"): 
-    y_pred = model.predict(X_test) 
-    y_prob = model.predict_proba(X_test)[:, 1] 
-    metrics = { 
-        "model": label, 
-        "accuracy": accuracy_score(y_test, y_pred), 
-        "precision": precision_score(y_test, y_pred), 
-        "recall": recall_score(y_test, y_pred), 
-        "f1": f1_score(y_test, y_pred), 
-        "roc_auc": roc_auc_score(y_test, y_prob), 
+# ---- 3. Evaluation implementation ----
+def evaluate_model(model, X_test, y_test, label="Model"):
+    y_pred = model.predict(X_test)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    metrics = {
+        "model": label,
+        "accuracy": accuracy_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred),
+        "recall": recall_score(y_test, y_pred),
+        "f1": f1_score(y_test, y_pred),
+        "roc_auc": roc_auc_score(y_test, y_prob),
     }
-print(f"\n--- {label} ---")
+    print(f"\n--- {label} ---")
     print(classification_report(y_test, y_pred))
     print("Confusion Matrix:")
     print(confusion_matrix(y_test, y_pred))
- 
     return metrics
- 
+
+baseline_metrics = evaluate_model(rf, X_test, y_test, label="Baseline RF")
+
+# ---- 4. Grid search for tuning ----
+def tune_rf(X_train, y_train):
+    param_grid = {
+        "n_estimators": [100, 200, 300],
+        "max_depth": [None, 10, 20, 30],
+        "min_samples_split": [2, 5, 10],
+        "min_samples_leaf": [1, 2, 4],
+        "max_features": ["sqrt", "log2"],
+    }
+    grid_search = GridSearchCV(
+        estimator=RandomForestClassifier(random_state=42),
+        param_grid=param_grid,
+        cv=5,
+        scoring="f1",
+        n_jobs=-1,
+        verbose=1,
+    )
+    grid_search.fit(X_train, y_train)
+    print("\nBest Params:", grid_search.best_params_)
+    print("Best CV F1 Score:", grid_search.best_score_)
+    return grid_search.best_estimator_
+
+tuned_model = tune_rf(X_train, y_train)
+tuned_metrics = evaluate_model(tuned_model, X_test, y_test, label="Tuned RF")
+
+# ---- 5-7. Compare baseline vs tuned ----
+def compare_models(baseline_metrics, tuned_metrics):
+    comparison = pd.DataFrame([baseline_metrics, tuned_metrics])
+    comparison = comparison.set_index("model")
+    print("\n=== Baseline vs Tuned RF Comparison ===")
+    print(comparison.round(4))
+    return comparison
+
+compare_models(baseline_metrics, tuned_metrics)
