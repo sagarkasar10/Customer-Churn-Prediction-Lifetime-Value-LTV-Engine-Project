@@ -1,21 +1,18 @@
-"""Loads the trained machine learning model."""
+"""
+model_loader.py
+Loads the trained machine learning model.
+"""
 
-import joblib
-from pathlib import Path
+import pickle
 
 from backend.config import MODEL_PATH
 
 
 def load_model():
+    #Loads the trained ML model.
+    #Returns trained model object.
 
-    #Load the trained ML model
-    model_path = Path(MODEL_PATH)
-
-    if not model_path.exists():
-        raise FileNotFoundError(
-            f"Model file not found at: {MODEL_PATH}"
-        )
-
-    model = joblib.load(model_path)
+    with open(MODEL_PATH, "rb") as file:
+        model = pickle.load(file)
 
     return model

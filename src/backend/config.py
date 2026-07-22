@@ -1,14 +1,16 @@
 """
+config.py
 Stores configuration variables used throughout the backend.
-Keeping all settings in one place makes the project easier to maintain.
 """
 
-# Application Information
+# Application Configuration
 APP_NAME = "Customer Churn Prediction & LTV Engine"
 APP_VERSION = "1.0.0"
 
-# Model Configuration
-MODEL_PATH = "models/ltv_model.pkl"
+#PostgresSQL Database
+DATABASE_URL = (
+    "postgresql://postgres:zaalimag1@localhost:5432/customer_churn"
+)
 
-# Database Configuration
-DATABASE_PATH = "database/customer_churn.db"
+# ML Model
+MODEL_PATH = "src/ml/ensemble_regressor.pkl"
