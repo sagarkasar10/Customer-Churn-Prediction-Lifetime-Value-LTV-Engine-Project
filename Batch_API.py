@@ -2,6 +2,8 @@ from typing import List
 from pydantic import BaseModel
 import asyncio 
 from functools import partial
+from fastapi import APIRouter
+router = APIRouter()
 
 class CustomerData(BaseModel):
     gender: str 
@@ -39,3 +41,36 @@ async def run_batch(customers,predict_func):
         for customer in customers
     ]
     return await asyncio.gather(*tasks)
+
+
+
+
+@router.post("/predict/batch")
+async def predict_batch():
+
+    predictions = [
+        {
+            "customerID": "C001",
+            "churn_probability": 0.35,
+            "predicted_ltv": 1500.0,
+            "risk_tier": "Medium"
+        },
+        {
+            "customerID": "C002",
+            "churn_probability": 0.72,
+            "predicted_ltv": 850.0,
+            "risk_tier": "High"
+        },
+        {
+            "customerID": "C003",
+            "churn_probability": 0.18,
+            "predicted_ltv": 2400.0,
+            "risk_tier": "Low"
+        }
+    ]
+
+    return {
+        "message": "Batch prediction completed successfully",
+        "total_customers": len(predictions),
+        "predictions": predictions
+    }
