@@ -1,37 +1,40 @@
-""" Entry point for the Customer Churn Prediction & LTV Engine backend.
-This file initializes the FastAPI application and provides basic endpoints
-to verify that the backend is running. """
+"""
+main.py
+
+Entry point of the Customer Churn Prediction & LTV Engine backend.
+"""
 
 from fastapi import FastAPI
-from backend.config import APP_NAME, APP_VERSION
 
-# Create FastAPI application
+from backend.config import APP_NAME, APP_VERSION
+from backend.database import Base, engine
+
+# Initialize FastAPI application
 app = FastAPI(
     title=APP_NAME,
-    description="Backend API for Customer Churn and Lifetime Value Prediction",
-    version=APP_VERSION
+    description="Backend API for Customer Churn Prediction & Lifetime Value Estimation",
+    version=APP_VERSION,
 )
 
-# Home endpoint
+
 @app.get("/")
 def home():
-    #Root endpoint.
-    #Returns a welcome message and backend status.
-
+    """
+    Root endpoint.
+    """
     return {
-        "project": "Customer Churn Prediction & LTV Engine",
+        "project": APP_NAME,
         "status": "Backend Running",
-        "version": "1.0.0"
+        "version": APP_VERSION
     }
 
-# Health check endpoint
+
 @app.get("/health")
 def health_check():
-    #Health check endpoint.
-    #Used to verify that the backend service is active.
-  
-
+    """
+    Health check endpoint.
+    """
     return {
         "status": "Healthy",
-        "message": "Backend service is running successfully."
+        "backend": "Running"
     }

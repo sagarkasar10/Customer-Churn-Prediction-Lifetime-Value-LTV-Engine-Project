@@ -1,20 +1,38 @@
-"""Handles database connection for the Customer Churn project."""
+"""
+database.py
+Creates the PostgreSQL database connection using SQLAlchemy.
+"""
 
-import sqlite3
-from backend.config import DATABASE_PATH
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-
-def get_database_connection():
-    #Create and return a connection to the SQLite database.
-
-
-    connection = sqlite3.connect(DATABASE_PATH)
-
-    return connection
+from backend.config import DATABASE_URL
 
 
-def close_database_connection(connection):
-    #Close an active database connection.
+# Create database engine
+engine = create_engine(
+    DATABASE_URL,
+    echo=True
+)
 
-    if connection:
-        connection.close()
+# Create session
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+# Base class for ORM models
+Base = declarative_base()
+
+
+def get_db():
+
+    #Creates a database session.
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
