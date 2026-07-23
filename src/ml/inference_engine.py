@@ -1,6 +1,6 @@
 import pickle
 
-# ---- Load trained models ----
+# ---- Load trained models ---
 with open("baseline_regressor.pkl", "rb") as f:
     baseline_model = pickle.load(f)
 
