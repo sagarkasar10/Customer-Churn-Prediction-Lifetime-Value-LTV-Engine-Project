@@ -1,13 +1,14 @@
 """
 main.py
-
 Entry point of the Customer Churn Prediction & LTV Engine backend.
 """
-
 from fastapi import FastAPI
-
 from backend.config import APP_NAME, APP_VERSION
 from backend.database import Base, engine
+from backend.models import Customer
+
+Base.metadata.create_all(bind=engine)
+
 
 # Initialize FastAPI application
 app = FastAPI(
