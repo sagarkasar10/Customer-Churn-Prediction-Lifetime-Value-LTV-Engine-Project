@@ -111,11 +111,6 @@ def create_average_monthly_ratio(df):
     Handles customers with zero tenure.
     """
 
-    df["TotalCharges"] = pd.to_numeric(
-        df["TotalCharges"],
-        errors="coerce"
-    )
-
     df["AverageMonthlyRatio"] = np.where(
         df["tenure"] == 0,
         df["MonthlyCharges"],
