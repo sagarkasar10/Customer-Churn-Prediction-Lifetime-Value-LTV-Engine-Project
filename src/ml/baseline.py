@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
 from sklearn.linear_model import LinearRegression
-g
+
 # ---- Train baseline Linear Regression ----
 baseline_model = LinearRegression()
 baseline_model.fit(X_train, y_train)
