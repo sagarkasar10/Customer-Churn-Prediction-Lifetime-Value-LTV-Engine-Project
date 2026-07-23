@@ -4,6 +4,7 @@ import asyncio
 from functools import partial
 from fastapi import APIRouter
 router = APIRouter()
+#from src.db.crud import save_prediction 
 
 class CustomerData(BaseModel):
     gender: str 
@@ -46,28 +47,22 @@ async def run_batch(customers,predict_func):
 
 
 @router.post("/predict/batch")
-async def predict_batch():
+async def predict_batch(request: BatchPredictionRequest):
 
-    predictions = [
-        {
-            "customerID": "C001",
+    predictions = []
+
+    for customer in request.customers:
+        prediction = {
+            "customerID": customer.customerID,
             "churn_probability": 0.35,
             "predicted_ltv": 1500.0,
             "risk_tier": "Medium"
-        },
-        {
-            "customerID": "C002",
-            "churn_probability": 0.72,
-            "predicted_ltv": 850.0,
-            "risk_tier": "High"
-        },
-        {
-            "customerID": "C003",
-            "churn_probability": 0.18,
-            "predicted_ltv": 2400.0,
-            "risk_tier": "Low"
         }
-    ]
+
+        # TODO: SAVE PREDICTION TO DATABASE USING MEMBER 2'S CRUD FUNCTION
+        # save_prediction(prediction)  # Save each prediction to the database
+
+        predictions.append(prediction)
 
     return {
         "message": "Batch prediction completed successfully",
