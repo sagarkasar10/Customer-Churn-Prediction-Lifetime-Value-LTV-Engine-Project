@@ -1,67 +1,7 @@
 #import libraries
-import pandas as pd
-from pathlib import Path
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
  
-# Load Dataset
-def load_data(file_path):
-    """
-    Load the dataset from a CSV file.
-    """
-    try:
-        df = pd.read_csv(file_path)
-        print("\nDataset loaded successfully.")
-        return df
-
-    except FileNotFoundError:
-        print("\nERROR: Dataset file not found!")
-        print(f"Please check the file path:\n{file_path}")
-        return None
-
-
-#Inspect Dataset:
-def data_info(df):
-    """
-    Display basic information about the dataset.
-    """
-    print("\nDATASET INFORMATION:")
-    
-    print("\nShape of Dataset:")
-    print(df.shape)
-
-    print("\nColumn Names:")
-    print(df.columns.tolist())
-
-    print("\nData Types:")
-    print(df.dtypes)
-
-    print("\nMissing values:")
-    print(df.isnull().sum())
-
-    print("\nDuplicate Rows:")
-    print(df.duplicated().sum())
-
-    print ("\nFirst 5 rows:")
-    print(df.head())
-
-
-#cleaning dataset:
-def clean_data(df):
-    """
-    Clean and prepare the dataset for preprocessing.
-    """
-    print("\nDATA CLEANING")
-
-    # Convert TotalCharges to numeric
-    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"].replace(" ", pd.NA),errors="coerce")
-
-    # Fill missing values
-    df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
-
-    print("\nDataset cleaned successfully!")
-    return df
-
 
 #Train-Test split:
 def data_split(df):
@@ -132,49 +72,3 @@ def cross_validation():
     print ("\nCross Validation created successfully!")
     return cvalid
 
-
-#Main function:
-def main():
-    """
-    Run the complete data preprocessing pipeline.
-    """
-
-    # Locate project root
-    project_root = Path(__file__).resolve().parent.parent
-    file_path = project_root / "WA_Fn-UseC_-Telco-Customer-Churn (1).csv"
-
-
-    # Load dataset
-    df = load_data(file_path)
-    if df is None:
-        return
-
-    #inspect dataset
-    data_info(df)
-
-    #cleaning dataset
-    df = clean_data(df)
-
-   #train-test split
-    X_train, X_test, y_train, y_test = data_split(df)
-    print(f"\nX_train Shape: {X_train.shape}")
-    print(f"\nX_test Shape : {X_test.shape}")
-    print(f"\ny_train Shape: {y_train.shape}")
-    print(f"\ny_test Shape : {y_test.shape}")
-
-    #data Scaling
-    X_train, X_test, scaler = data_scaling(
-        X_train,
-        X_test
-    )
-
-    #cross validation
-    cvalid = cross_validation()
-    print(cvalid)
-
-    #complete
-    print("\nDATA PREPARATION COMPLETED!")
-
-
-if __name__ == "__main__":
-    main()
