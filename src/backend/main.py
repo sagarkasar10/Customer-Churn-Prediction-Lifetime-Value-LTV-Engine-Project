@@ -6,9 +6,11 @@ from fastapi import FastAPI
 from backend.config import APP_NAME, APP_VERSION
 from backend.database import Base, engine
 from backend.models import Customer
+from backend.model_loader import load_model
 
 Base.metadata.create_all(bind=engine)
 
+load_model()
 
 # Initialize FastAPI application
 app = FastAPI(

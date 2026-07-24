@@ -1,18 +1,24 @@
 """
 model_loader.py
-Loads the trained machine learning model.
+Loads the trained ML model.
 """
 
 import pickle
-
 from backend.config import MODEL_PATH
 
+model = None
 
 def load_model():
-    #Loads the trained ML model.
-    #Returns trained model object.
+    #Load trained ML model.
+
+    global model
 
     with open(MODEL_PATH, "rb") as file:
         model = pickle.load(file)
 
+    return model
+
+
+def get_model():
+    #Returns loaded model.
     return model
