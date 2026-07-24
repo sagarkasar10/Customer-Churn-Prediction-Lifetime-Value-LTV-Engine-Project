@@ -54,7 +54,7 @@ def data_scaling(X_train, X_test):
     print("\nScaled Columns:")
     print(numerical_columns)
 
-    return X_train, X_test, scaler
+    return X_train, X_test
 
 
 #Cross validation:
