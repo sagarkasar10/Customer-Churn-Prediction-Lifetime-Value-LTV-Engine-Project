@@ -50,16 +50,16 @@ def evaluate_model(model, X_test, y_test, label="Model"):
 # ---- 4. Grid search for tuning ----
 def tune_rf(X_train, y_train):
     param_grid = {
-        "n_estimators": [100, 200, 300],
-        "max_depth": [None, 10, 20, 30],
-        "min_samples_split": [2, 5, 10],
-        "min_samples_leaf": [1, 2, 4],
-        "max_features": ["sqrt", "log2"],
+        "n_estimators": [100, 200],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5],
+        "min_samples_leaf": [1, 2],
+        "max_features": ["sqrt"],
     }
     grid_search = GridSearchCV(
-        estimator=RandomForestClassifier(random_state=42),
+        estimator=RandomForestClassifier(random_state=42, n_jobs=-1),
         param_grid=param_grid,
-        cv=5,
+        cv=3,
         scoring="f1",
         n_jobs=-1,
         verbose=1,
