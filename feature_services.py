@@ -67,17 +67,6 @@ def service_complexity_score(df):
     return df
 
 
-def create_service_features(df):
-
-    df = handle_missing_service_data(df)
-
-    df = total_services_count(df)
-
-    df = service_complexity_score(df)
-
-    return df
-
-
 def create_tenure_cohorts(df):
     """
     Groups customers based on tenure.
