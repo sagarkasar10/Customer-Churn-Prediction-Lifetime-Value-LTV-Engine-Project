@@ -5,6 +5,8 @@ from functools import partial
 from fastapi import APIRouter
 router = APIRouter()
 #from src.db.crud import save_prediction 
+import pandas as pd
+import numpy as np
 
 class CustomerData(BaseModel):
     gender: str 
@@ -69,3 +71,26 @@ async def predict_batch(request: BatchPredictionRequest):
         "total_customers": len(predictions),
         "predictions": predictions
     }
+
+
+
+
+def vectorized_batch_processing(df: pd.DataFrame):
+    # Vectorized LTV calculation
+    df["predicted_ltv"] = (
+        df["MonthlyCharges"] /
+        (df["ChurnProbability"] + df["BaselineVariance"])
+    )
+
+    # Vectorized Risk Tier
+    df["risk_tier"] = np.select(
+        [
+            df["ChurnProbability"] < 0.3,
+            (df["ChurnProbability"] >= 0.3) & (df["ChurnProbability"] < 0.7),
+            df["ChurnProbability"] >= 0.7
+        ],
+        ["Low", "Medium", "High"],
+        default="Unknown"
+    )
+
+    return df
