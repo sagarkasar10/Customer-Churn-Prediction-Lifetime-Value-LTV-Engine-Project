@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 class Customer(BaseModel):
     customerID: str = Field(..., description="Unique customer identifier", examples=["7590-VHVEG"])
@@ -21,3 +21,32 @@ class Customer(BaseModel):
     PaymentMethod: str = Field(..., description="Payment method used", examples=["Electronic check"])
     MonthlyCharges: float = Field(..., gt=0, description="Monthly charge amount", examples=[29.85])
     TotalCharges: float = Field(..., ge=0, description="Total amount charged", examples=[29.85])
+
+    @field_validator("Contract")
+    @classmethod
+    def validate_contract(cls, value: str) -> str:
+        allowed = {"Month-to-month", "One year", "Two year"}
+        if value not in allowed:
+            raise ValueError(f"Invalid Contract value '{value}'. Must be one of {allowed}")
+        return value
+
+    @field_validator("InternetService")
+    @classmethod
+    def validate_internet_service(cls, value: str) -> str:
+        allowed = {"DSL", "Fiber optic", "No"}
+        if value not in allowed:
+            raise ValueError(f"Invalid InternetService value '{value}'. Must be one of {allowed}")
+        return value
+
+    @field_validator("PaymentMethod")
+    @classmethod
+    def validate_payment_method(cls, value: str) -> str:
+        allowed = {
+            "Electronic check",
+            "Mailed check",
+            "Bank transfer (automatic)",
+            "Credit card (automatic)"
+        }
+        if value not in allowed:
+            raise ValueError(f"Invalid PaymentMethod value '{value}'. Must be one of {allowed}")
+        return value
