@@ -5,7 +5,7 @@ Entry point of the Customer Churn Prediction & LTV Engine backend.
 from fastapi import FastAPI
 from backend.config import APP_NAME, APP_VERSION
 from backend.database import Base, engine
-from backend.models import Customer
+from backend.models import Customer, Prediction
 from backend.model_loader import load_model
 
 Base.metadata.create_all(bind=engine)
