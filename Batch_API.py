@@ -7,6 +7,7 @@ router = APIRouter()
 #from src.db.crud import save_prediction 
 import pandas as pd
 import numpy as np
+import time
 
 class CustomerData(BaseModel):
     gender: str 
@@ -94,3 +95,20 @@ def vectorized_batch_processing(df: pd.DataFrame):
     )
 
     return df
+
+
+# Day 8 - Performance Benchmarking
+def benchmark_batch_processing(df: pd.DataFrame):
+    start_time = time.perf_counter()
+
+    result = vectorized_batch_processing(df)
+
+    end_time = time.perf_counter()
+
+    print(f"Processed Records: {len(df)}")
+    print(f"Execution Time: {end_time - start_time:.4f} seconds")
+
+    return result
+
+
+   
