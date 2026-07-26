@@ -2,15 +2,17 @@
 main.py
 Entry point of the Customer Churn Prediction & LTV Engine backend.
 """
+import logging
+
 from fastapi import FastAPI
+
 from backend.config import APP_NAME, APP_VERSION
 from backend.database import Base, engine
 from backend.models import Customer, Prediction
 from backend.model_loader import load_model
 
+logging.basicConfig(level=logging.INFO)
 Base.metadata.create_all(bind=engine)
-
-load_model()
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -18,6 +20,15 @@ app = FastAPI(
     description="Backend API for Customer Churn Prediction & Lifetime Value Estimation",
     version=APP_VERSION,
 )
+
+
+@app.on_event("startup")
+def startup():
+    """
+    Load ML model when backend starts.
+    """
+    load_model()
+
 
 
 @app.get("/")
