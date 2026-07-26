@@ -97,7 +97,7 @@ def vectorized_batch_processing(df: pd.DataFrame):
     return df
 
 
-# Day 8 - Performance Benchmarking
+
 def benchmark_batch_processing(df: pd.DataFrame):
     start_time = time.perf_counter()
 
@@ -111,4 +111,18 @@ def benchmark_batch_processing(df: pd.DataFrame):
     return result
 
 
-   
+def api_usage_guide():
+    print("\n===== API USAGE GUIDE =====")
+    print("Base URL: http://127.0.0.1:8000")
+    print("POST /predict/single")
+    print("POST /predict/batch")
+    print("Swagger Docs: http://127.0.0.1:8000/docs")
+    print("\nResponse Fields:")
+    print("- predicted_ltv")
+    print("- risk_tier")
+    print("\nStatus Codes:")
+    print("200 - Success")
+    print("400 - Bad Request")
+    print("422 - Validation Error")
+    print("500 - Internal Server Error")
+
