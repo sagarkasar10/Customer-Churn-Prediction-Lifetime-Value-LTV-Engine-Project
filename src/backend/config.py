@@ -9,7 +9,7 @@ APP_VERSION = "1.0.0"
 
 #PostgresSQL Database
 DATABASE_URL = (
-    "postgresql://postgres:zaalimag1@localhost:5432/customer_churn"
+    "postgresql://postgres:postTiya@localhost:5432/customer_churn"
 )
 
 # ML Model
