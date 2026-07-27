@@ -20,7 +20,12 @@ class Customer(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    customerID = Column(String(50), unique=True, nullable=False)
+    customerID = Column(
+        String(50), 
+        unique=True, 
+        nullable=False,
+        index=True
+    )
 
     gender = Column(String(10))
 
@@ -64,7 +69,8 @@ class Prediction(Base):
     customerID = Column(
         String(50),
         ForeignKey("customers.customerID"),
-        nullable=False
+        nullable=False,
+        index=True
     )
 
     predicted_churn = Column(String(10))
