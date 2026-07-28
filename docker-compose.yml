@@ -1,0 +1,24 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postTiya
+      POSTGRES_DB: customer_churn
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postTiya@db:5432/customer_churn
