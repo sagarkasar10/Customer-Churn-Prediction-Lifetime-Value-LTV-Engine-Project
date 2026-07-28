@@ -1,14 +1,17 @@
 """
 crud.py
-Database operations using SQLAlchemy.
+CRUD (Create, Read, Update, Delete) operations
+for Customer and Prediction tables.
 """
+
 from sqlalchemy.orm import Session
 from backend.models import Customer, Prediction
 
 
+#Customer table
 def create_customer(db: Session, customer: Customer):
     """
-    Insert a new customer into the database.
+    Add a new customer into the database.
     """
     db.add(customer)
     db.commit()
@@ -16,7 +19,14 @@ def create_customer(db: Session, customer: Customer):
     return customer
 
 
-def get_customer(db: Session, customer_id: str):
+def get_all_customers(db: Session):
+    """
+    Fetch all customers.
+    """
+    return db.query(Customer).all()
+
+
+def get_customer_by_id(db: Session, customer_id: str):
     """
     Fetch a customer by customerID.
     """
@@ -27,49 +37,37 @@ def get_customer(db: Session, customer_id: str):
     )
 
 
-def get_all_customers(db: Session):
+def count_customers(db: Session):
     """
-    Fetch all customers.
+    Return total number of customers.
     """
-    return db.query(Customer).all()
+    return db.query(Customer).count()
 
 
-def update_customer(db: Session, customer_id: str, updated_data: dict):
+def customer_exists(db: Session, customer_id: str):
     """
-    Update customer details.
+    Check whether a customer exists.
     """
-    customer = (
-        db.query(Customer)
-        .filter(Customer.customerID == customer_id)
-        .first()
-    )
-    if customer:
-        for key, value in updated_data.items():
-            setattr(customer, key, value)
-
-        db.commit()
-        db.refresh(customer)
-
-    return customer
-
-
-def delete_customer(db: Session, customer_id: str):
-    """
-    Delete a customer.
-    """
-    customer = (
+    return (
         db.query(Customer)
         .filter(Customer.customerID == customer_id)
         .first()
     )
 
-    if customer:
-        db.delete(customer)
-        db.commit()
 
-    return customer
+def get_customers_by_tenure(db: Session):
+    """
+    Return customers sorted by tenure in descending order.
+    """
+    return (
+        db.query(Customer)
+        .order_by(Customer.tenure.desc())
+        .all()
+    )
 
-def save_prediction(db: Session, prediction: Prediction):
+
+#Prediction table
+def create_prediction(db: Session, prediction: Prediction):
     """
     Save a prediction to the database.
     """
@@ -79,18 +77,14 @@ def save_prediction(db: Session, prediction: Prediction):
     return prediction
 
 
-def get_prediction(db: Session, prediction_id: int):
+def get_all_prediction(db: Session):
     """
-    Fetch a prediction by its ID.
+    Retrieve all prediction records.
     """
-    return (
-        db.query(Prediction)
-        .filter(Prediction.id == prediction_id)
-        .first()
-    )
+    return db.query(Prediction).all()
 
 
-def get_prediction_history(db: Session, customer_id: str):
+def get_prediction_by_customer(db: Session, customer_id: str):
     """
     Fetch all predictions for a customer.
     """
