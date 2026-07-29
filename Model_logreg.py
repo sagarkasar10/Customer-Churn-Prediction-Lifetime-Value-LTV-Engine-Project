@@ -3,6 +3,7 @@ import joblib
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import roc_auc_score
 
 def logistic_regression_model(X_train, y_train, X_test, y_test):
     #define the hyperparameter grid for logistic regression
@@ -34,12 +35,15 @@ def logistic_regression_model(X_train, y_train, X_test, y_test):
     return best_model, y_pred, grid_search
 
 
-def evaluate_logreg_model(y_test, y_pred, best_model, grid_search):
+def evaluate_logreg_model(X_test,y_test, y_pred, best_model, grid_search):
     #evaluate the model
     print("Accuracy:", accuracy_score(y_test, y_pred))
     print("Precision:", precision_score(y_test, y_pred))
     print("Recall:", recall_score(y_test, y_pred))
     print("F1 Score:", f1_score(y_test, y_pred))
+    y_proba = best_model.predict_proba(X_test)[:, 1]
+    roc_auc = roc_auc_score(y_test, y_proba)
+    print("ROC AUC Score:", roc_auc)
 
 
     #generate the confusion matrix
