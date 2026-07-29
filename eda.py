@@ -194,3 +194,80 @@ def tenure_cohort_vs_churn(df):
     plt.ylabel("Number of Customers")
     plt.tight_layout()
     plt.show()
+
+def monthly_charges_vs_churn(df):
+    """
+    Analyze the relationship between monthly charges
+    and customer churn.
+    """
+
+    print("\n" + "=" * 60)
+    print("MONTHLY CHARGES VS CHURN")
+    print("=" * 60)
+
+    if "MonthlyCharges" not in df.columns:
+        print("Column 'MonthlyCharges' not found.")
+        return
+
+    charges_summary = df.groupby("Churn")["MonthlyCharges"].agg(
+        ["mean", "median", "min", "max"]
+    )
+
+    print("\nMonthly Charges Statistics by Churn:")
+    print(charges_summary.round(2))
+
+    plt.figure(figsize=(9, 6))
+
+    sns.boxplot(
+        data=df,
+        x="Churn",
+        y="MonthlyCharges"
+    )
+
+    plt.title("Monthly Charges vs Customer Churn")
+    plt.xlabel("Churn")
+    plt.ylabel("Monthly Charges")
+
+    plt.tight_layout()
+    plt.show()
+
+
+def payment_method_vs_churn(df):
+    """
+    Analyze the relationship between payment method
+    and customer churn.
+    """
+
+    print("\n" + "=" * 60)
+    print("PAYMENT METHOD VS CHURN")
+    print("=" * 60)
+
+    if "PaymentMethod" not in df.columns:
+        print("Column 'PaymentMethod' not found.")
+        return
+
+    payment_churn = pd.crosstab(
+        df["PaymentMethod"],
+        df["Churn"],
+        normalize="index"
+    ) * 100
+
+    print("\nChurn Percentage by Payment Method:")
+    print(payment_churn.round(2))
+
+    plt.figure(figsize=(11, 6))
+
+    sns.countplot(
+        data=df,
+        x="PaymentMethod",
+        hue="Churn"
+    )
+
+    plt.title("Payment Method vs Customer Churn")
+    plt.xlabel("Payment Method")
+    plt.ylabel("Number of Customers")
+
+    plt.xticks(rotation=30, ha="right")
+
+    plt.tight_layout()
+    plt.show()
