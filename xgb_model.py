@@ -1,7 +1,7 @@
 import xgboost as xgb
 import shap 
 import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report, precision_score, recall_score, f1_score, roc_auc_score, accuracy_score
 
 
 def train_xgboost_model(x_train, y_train):
@@ -16,7 +16,7 @@ def train_xgboost_model(x_train, y_train):
     return xgb_model
 
 
-def tuning_and_evaluation_xgb_model(x_test, y_test, xgb_model):
+def evaluation_xgb_model(x_test, y_test, xgb_model):
     # Make predictions
     y_pred = xgb_model.predict(x_test)
 
@@ -24,11 +24,22 @@ def tuning_and_evaluation_xgb_model(x_test, y_test, xgb_model):
     print("Classification Report of XGBoost Model:")
     print(classification_report(y_test, y_pred))
 
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"XGBoost Accuracy: {accuracy:.4f}")
 
-    print(f"XGBoost Precision: {precision:.4f} \nXGBoost Recall: {recall:.4f} \nXGBoost F1 Score: {f1:.4f}")
+    precision = precision_score(y_test, y_pred)
+    print(f"XGBoost Precision: {precision:.4f}")
+
+    recall = recall_score(y_test, y_pred)
+    print(f"XGBoost Recall: {recall:.4f}")
+
+    f1 = f1_score(y_test, y_pred)
+    print(f"XGBoost F1 Score: {f1:.4f}")
+
+    y_prob = xgb_model.predict_proba(x_test)[:, 1]
+    roc_auc = roc_auc_score(y_test, y_prob)
+    print(f"XGBoost ROC-AUC: {roc_auc:.4f}")
+
 
 def initialize_shap(xgb_model, x_train):
     # Initialize SHAP explainer
