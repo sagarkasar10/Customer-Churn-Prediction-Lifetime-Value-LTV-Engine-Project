@@ -114,3 +114,83 @@ def contract_vs_churn(df):
 
     plt.tight_layout()
     plt.show()
+
+def tenure_vs_churn(df):
+    """
+    Analyze the relationship between customer tenure
+    and churn.
+    """
+    print("\n" + "=" * 60)
+    print("TENURE VS CHURN")
+    print("=" * 60)
+
+    if "tenure" not in df.columns:
+        print("Column 'tenure' not found.")
+        return
+    
+    tenure_summary = df.groupby("Churn")["tenure"].agg(
+        ["mean", "median", "min", "max"]
+    )
+
+    print("\nTenure Statistics by Churn:")
+    print(tenure_summary.round(2))
+    plt.figure(figsize=(9, 6))
+    sns.boxplot(
+        data=df,
+        x="Churn",
+        y="tenure"
+    )
+
+    plt.title("Customer Tenure vs Churn")
+    plt.xlabel("Churn")
+    plt.ylabel("Tenure (Months)")
+    plt.tight_layout()
+    plt.show()
+
+
+def tenure_cohort_vs_churn(df):
+
+    """
+    Group customers into tenure cohorts and analyze
+    churn rate for each cohort.
+    """
+
+    print("\n" + "=" * 60)
+    print("TENURE COHORT VS CHURN")
+    print("=" * 60)
+
+    if "tenure" not in df.columns:
+        print("Column 'tenure' not found.")
+        return
+
+    df_eda = df.copy()
+    df_eda["TenureCohort"] = pd.cut(
+    df_eda["tenure"],
+        bins=[-1, 12, 24, 48, 72],
+        labels=[
+            "0-12 Months",
+            "13-24 Months",
+            "25-48 Months",
+            "49-72 Months"
+        ]
+    )
+
+    cohort_churn = pd.crosstab(
+        df_eda["TenureCohort"],
+        df_eda["Churn"],
+        normalize="index"
+    ) * 100
+    print("\nChurn Percentage by Tenure Cohort:")
+    print(cohort_churn.round(2))
+    plt.figure(figsize=(10, 6))
+    sns.countplot(
+        data=df_eda,
+        x="TenureCohort",
+        hue="Churn"
+    )
+    
+    plt.title("Tenure Cohort vs Customer Churn")
+    plt.xlabel("Tenure Cohort")
+    plt.ylabel("Number of Customers")
+    plt.tight_layout()
+    plt.show()
