@@ -107,7 +107,7 @@ def main():
         print("==============================")
 
         best_model, y_pred, grid_search = logistic_regression_model(X_train, y_train, X_test, y_test)
-        evaluate_logreg_model(y_test, y_pred, best_model, grid_search)
+        evaluate_logreg_model(X_test, y_test, y_pred, best_model, grid_search)
 
 
         # 7. RANDOM FOREST
