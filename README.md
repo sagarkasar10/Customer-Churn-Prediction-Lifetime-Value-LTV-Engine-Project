@@ -5,7 +5,6 @@
 ## 2. Week 1 – Data Ingestion & EDA
 
 ### Data Source
-### PostgreSQL Data Ingestion
 ### Data Preprocessing
 ### Exploratory Data Analysis
 ### Key EDA Findings
@@ -22,7 +21,10 @@
 
 ## Current Project Status
 
-Week 1: Completed
-Week 2: Completed
-Week 3: Planned
-Week 4: Planned
+Week 1: Completed  
+
+Week 2: Completed  
+
+Week 3: Planned  
+
+Week 4: Planned  
