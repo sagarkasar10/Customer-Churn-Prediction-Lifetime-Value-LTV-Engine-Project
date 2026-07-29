@@ -1,11 +1,12 @@
 import pandas as pd
+from eda import run_eda
 from Preprocessing import preprocessing_data
 from src.data_preparation import data_split, data_scaling
 from feature_services import handle_missing_service_data, total_services_count, service_complexity_score, \
     create_tenure_cohorts, create_average_monthly_ratio, handle_outliers
 from Model_logreg import logistic_regression_model, evaluate_logreg_model
 from ensemble_random_forest import rf_model, evaluate_model, tune_rf, feature_importance_plot, compare_models
-from xgb_model import train_xgboost_model, tuning_and_evaluation_xgb_model, initialize_shap, shap_summary_plot
+from xgb_model import train_xgboost_model, evaluation_xgb_model, initialize_shap, shap_summary_plot
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
@@ -21,9 +22,17 @@ def main():
 
         print("\nLoading dataset...")
 
-        df = pd.read_csv('WA_Fn-UseC_-Telco-Customer-Churn (1).csv')
+        data = pd.read_csv('WA_Fn-UseC_-Telco-Customer-Churn (1).csv')
+
+        # Create a copy of the original dataset to avoid modifying it directly
+        df = data.copy()
 
         print(f"Dataset loaded successfully: {df.shape}")
+
+
+        #1.1: EDA
+        
+        run_eda(df)
 
 
         # 2. PREPROCESS & CLEAN DATA
@@ -144,7 +153,7 @@ def main():
 
         xgboost_model = train_xgboost_model(X_train, y_train)
 
-        tuning_and_evaluation_xgb_model(X_test, y_test, xgboost_model)
+        evaluation_xgb_model(X_test, y_test, xgboost_model)
 
 
         # 9. SHAP ANALYSIS
