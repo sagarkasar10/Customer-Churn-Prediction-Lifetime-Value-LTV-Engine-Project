@@ -4,7 +4,12 @@ from sklearn.linear_model import LinearRegression
 
 # ---- Train baseline Linear Regression ----
 baseline_model = LinearRegression()
-baseline_model.fit(X_train, y_train)
+baseline_features = ["tenure", "MonthlyCharges", "SeniorCitizen"]
+
+baseline_model.fit(
+    X_train[baseline_features],
+    y_train
+)
 
 print("Baseline Linear Regression trained successfully")
 print(f"Coefficients: {baseline_model.coef_}")
