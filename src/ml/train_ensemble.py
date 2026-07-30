@@ -1,5 +1,6 @@
 import pandas as pd
 import pickle
+import sys
 sys.path.append("src/ml")
 from sklearn.ensemble import RandomForestRegressor
 from prepare_data import get_processed_data
