@@ -4,7 +4,7 @@ import asyncio
 from functools import partial
 from fastapi import APIRouter
 router = APIRouter()
-#from src.db.crud import save_prediction 
+from src.backend.crud import create_prediction 
 import pandas as pd
 import numpy as np
 import time
