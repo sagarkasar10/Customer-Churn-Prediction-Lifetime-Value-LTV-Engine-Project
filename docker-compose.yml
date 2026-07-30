@@ -11,6 +11,10 @@ services:
       POSTGRES_DB: customer_churn
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - churn_network
 
   api:
     build:
@@ -22,3 +26,22 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql://postgres:postTiya@db:5432/customer_churn
+    networks:
+      - churn_network
+
+  metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - churn_network
+  
+
+  volumes:
+    pgdata:
+
+  networks:
+    churn_network:
+      driver: bridge
