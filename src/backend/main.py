@@ -5,6 +5,7 @@ Entry point of the Customer Churn Prediction & LTV Engine backend.
 import logging
 
 from fastapi import FastAPI
+from fastapi import Query
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -120,4 +121,39 @@ def get_customer_predictions(
     return crud.get_predictions_by_customer(
         db,
         customer_id
+    )
+
+
+@app.get("/customers/paginated")
+def get_customers_paginated(
+    skip: int = Query(0),
+    limit: int = Query(20),
+    db: Session = Depends(get_db)
+):
+    return crud.get_customers_paginated(
+        db,
+        skip,
+        limit
+    )
+
+
+@app.get("/customers/contract/{contract}")
+def get_customers_by_contract(
+    contract: str,
+    db: Session = Depends(get_db)
+):
+    return crud.get_customers_by_contract(
+        db,
+        contract
+    )
+
+
+@app.get("/customers/internet/{service}")
+def get_customers_by_internet(
+    service: str,
+    db: Session = Depends(get_db)
+):
+    return crud.get_customers_by_internet_service(
+        db,
+        service
     )
