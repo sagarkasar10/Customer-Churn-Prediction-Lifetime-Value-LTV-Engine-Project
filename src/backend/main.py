@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 from backend import crud
 from backend.config import APP_NAME, APP_VERSION
 from backend.database import get_db, Base, engine
-from backend.models import Customer, Prediction
 from backend.model_loader import load_model
 
 
@@ -105,10 +104,7 @@ def get_predictions(db: Session = Depends(get_db)):
 
 
 @app.get("/predictions/{customer_id}")
-def get_customer_predictions(
-    customer_id: str,
-    db: Session = Depends(get_db)
-):
+def get_customer_predictions(customer_id: str,db: Session = Depends(get_db)):
     """
     Retrieve prediction history for one customer.
     """
@@ -121,14 +117,11 @@ def get_customer_predictions(
             status_code=404,
             detail="No predictions found"
         )
-
     return predictions
 
 
 @app.get("/customers/paginated")
-def get_customers_paginated(
-    skip: int = Query(0),
-    limit: int = Query(20),
+def get_customers_paginated(skip: int = Query(0), limit: int = Query(20),
     db: Session = Depends(get_db)
 ):
     return crud.get_customers_paginated(

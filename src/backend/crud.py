@@ -87,14 +87,21 @@ def create_prediction(db: Session, prediction: Prediction):
         raise e
 
 
-def get_all_prediction(db: Session):
+def count_predictions(db: Session):
+    """
+    Return total predictions count.
+    """
+    return db.query(Prediction).count()
+
+
+def get_all_predictions(db: Session):
     """
     Retrieve all prediction records.
     """
     return db.query(Prediction).all()
 
 
-def get_prediction_by_customer(db: Session, customer_id: str):
+def get_predictions_by_customer(db: Session, customer_id: str):
     """
     Fetch all predictions for a customer.
     """
@@ -106,7 +113,9 @@ def get_prediction_by_customer(db: Session, customer_id: str):
 
 
 def delete_prediction(db: Session, customer_id: str):
-
+    """
+    Delete a prediction record by customer ID.
+    """
     prediction = (
         db.query(Prediction)
         .filter(Prediction.customerID == customer_id)
@@ -121,12 +130,6 @@ def delete_prediction(db: Session, customer_id: str):
         except SQLAlchemyError as e:
             db.rollback()
             raise e
-
-    return prediction
-
-    if prediction:
-        db.delete(prediction)
-        db.commit()
 
     return prediction
 
