@@ -1,0 +1,54 @@
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+    # In production, we ONLY use the .env file for credentials, no hardcoded strings
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - churn_network
+    # NEW FOR DAY 7: Health checks ensure the database is actually ready to accept connections
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+      # NEW FOR DAY 7: Points to the optimized, multi-stage production image from Day 6
+      dockerfile: Dockerfile.prod 
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT}:8000"
+    # NEW FOR DAY 7: The API will wait until the db healthcheck passes before booting
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - churn_network
+
+  metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "${METABASE_PORT}:3000"
+    # NEW FOR DAY 7: Metabase will also wait for the db to be fully ready
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - churn_network
+
+volumes:
+  pgdata:
+
+networks:
+  churn_network:
+    driver: bridge
