@@ -6,17 +6,22 @@ for Customer and Prediction tables.
 
 from sqlalchemy.orm import Session
 from backend.models import Customer, Prediction
+from sqlalchemy.exc import SQLAlchemyError
 
 
-#Customer table
 def create_customer(db: Session, customer: Customer):
     """
-    Add a new customer into the database.
+    Add a new customer to the database.
     """
-    db.add(customer)
-    db.commit()
-    db.refresh(customer)
-    return customer
+    try:
+        db.add(customer)
+        db.commit()
+        db.refresh(customer)
+        return customer
+
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise e
 
 
 def get_all_customers(db: Session):
@@ -69,12 +74,17 @@ def get_customers_by_tenure(db: Session):
 #Prediction table
 def create_prediction(db: Session, prediction: Prediction):
     """
-    Save a prediction to the database.
+    Save prediction into database.
     """
-    db.add(prediction)
-    db.commit()
-    db.refresh(prediction)
-    return prediction
+    try:
+        db.add(prediction)
+        db.commit()
+        db.refresh(prediction)
+        return prediction
+
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise e
 
 
 def get_all_prediction(db: Session):
@@ -95,15 +105,24 @@ def get_prediction_by_customer(db: Session, customer_id: str):
     )
 
 
-def delete_prediction(db: Session, prediction_id: int):
-    """
-    Delete a prediction.
-    """
+def delete_prediction(db: Session, customer_id: str):
+
     prediction = (
         db.query(Prediction)
-        .filter(Prediction.id == prediction_id)
+        .filter(Prediction.customerID == customer_id)
         .first()
     )
+    if prediction:
+
+        try:
+            db.delete(prediction)
+            db.commit()
+
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise e
+
+    return prediction
 
     if prediction:
         db.delete(prediction)
