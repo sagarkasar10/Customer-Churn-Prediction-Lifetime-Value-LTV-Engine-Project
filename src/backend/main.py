@@ -3,18 +3,13 @@ main.py
 Entry point of the Customer Churn Prediction & LTV Engine backend.
 """
 import logging
+from fastapi import FastAPI, Depends, HTTPException, Query
 
-from fastapi import FastAPI
-from fastapi import Query
-
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from backend.database import get_db
 from backend import crud
-
 from backend.config import APP_NAME, APP_VERSION
-from backend.database import Base, engine
+from backend.database import get_db, Base, engine
 from backend.models import Customer, Prediction
 from backend.model_loader import load_model
 
@@ -93,9 +88,10 @@ def get_customer(customer_id: str,
     )
 
     if not customer:
-        return {
-            "message": "Customer not found"
-        }
+        raise HTTPException(
+            status_code=404,
+            detail="Customer not found"
+        )
 
     return customer
 
@@ -114,14 +110,19 @@ def get_customer_predictions(
     db: Session = Depends(get_db)
 ):
     """
-    Retrieve prediction history
-    for one customer.
+    Retrieve prediction history for one customer.
     """
-
-    return crud.get_predictions_by_customer(
+    predictions = crud.get_predictions_by_customer(
         db,
         customer_id
     )
+    if not predictions:
+        raise HTTPException(
+            status_code=404,
+            detail="No predictions found"
+        )
+
+    return predictions
 
 
 @app.get("/customers/paginated")
