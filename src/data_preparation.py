@@ -54,20 +54,4 @@ def data_scaling(X_train, X_test):
     print("\nScaled Columns:")
     print(numerical_columns)
 
-    return X_train, X_test
-
-
-#Cross validation:
-def cross_validation():
-    """
-    Create a Stratified K-Fold cross-validation object.
-    """
-    print("\nCROSS VALIDATION:")
-
-    cvalid = StratifiedKFold(
-        n_splits=5,
-        shuffle=True,
-        random_state=42)
-    
-    print ("\nCross Validation created successfully!")
-    return cvalid
+    return X_train, X_test, scaler
