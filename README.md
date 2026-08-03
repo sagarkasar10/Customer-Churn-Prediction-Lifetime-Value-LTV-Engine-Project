@@ -1,6 +1,9 @@
 # Customer-Churn-Prediction-Lifetime-Value-LTV-Engine-Project
 
 ## 1. Project Overview
+Predicts which customers are at risk of churning and estimates each
+customer's predictive Lifetime Value (LTV), so retention campaigns
+can be prioritized by expected revenue impact.
 
 ## 2. Week 1 – Data Ingestion & EDA
 
@@ -27,4 +30,4 @@ Week 2: Completed
 
 Week 3: Completed
 
-Week 4: Planned  
+Week 4: Completed  
