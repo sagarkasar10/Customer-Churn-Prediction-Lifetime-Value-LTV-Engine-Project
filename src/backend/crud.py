@@ -121,6 +121,38 @@ def delete_customer(db: Session, customer_id: str):
     return customer
 
 
+def get_customers_paginated(db: Session, skip: int = 0, limit: int = 20):
+    """
+    Return customers using pagination.
+    """
+    return (
+        db.query(Customer)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def get_customers_by_contract(db: Session, contract: str):
+    """
+    Return customers with given contract type.
+    """
+    return (
+        db.query(Customer)
+        .filter(Customer.Contract == contract)
+        .all()
+    )
+
+
+def get_customers_by_internet_service(db: Session, service: str):
+    """
+    Return customers using given internet service.
+    """
+    return (
+        db.query(Customer)
+        .filter(Customer.InternetService == service)
+        .all()
+    )
 
 
 # ==========================================
@@ -185,50 +217,3 @@ def delete_prediction(db: Session, customer_id: str):
             raise e
 
     return prediction
-
-def get_customers_paginated(
-    db: Session,
-    skip: int = 0,
-    limit: int = 20
-):
-    """
-    Return customers using pagination.
-    """
-
-    return (
-        db.query(Customer)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
-
-
-def get_customers_by_contract(
-    db: Session,
-    contract: str
-):
-    """
-    Return customers with given contract type.
-    """
-
-    return (
-        db.query(Customer)
-        .filter(Customer.Contract == contract)
-        .all()
-    )
-
-
-def get_customers_by_internet_service(
-    db: Session,
-    service: str
-):
-    """
-    Return customers using given internet service.
-    """
-
-    return (
-        db.query(Customer)
-        .filter(Customer.InternetService == service)
-        .all()
-    )
-   
