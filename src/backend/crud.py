@@ -5,7 +5,7 @@ for Customer and Prediction tables.
 """
 
 from sqlalchemy.orm import Session
-from backend.models import Customer, Prediction
+from src.backend.models import Customer, Prediction
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -49,15 +49,18 @@ def count_customers(db: Session):
     return db.query(Customer).count()
 
 
-def customer_exists(db: Session, customer_id: str):
+def customer_exists(db: Session, customer_id: str) -> bool:
     """
     Check whether a customer exists.
     """
-    return (
+
+    customer = (
         db.query(Customer)
         .filter(Customer.customerID == customer_id)
         .first()
     )
+
+    return customer is not None
 
 
 def get_customers_by_tenure(db: Session):
@@ -71,7 +74,29 @@ def get_customers_by_tenure(db: Session):
     )
 
 
-#Prediction table
+def delete_customer(db: Session, customer_id: str):
+    """
+    Delete a customer by customerID.
+    """
+
+    customer = (
+        db.query(Customer)
+        .filter(Customer.customerID == customer_id)
+        .first()
+    )
+
+    if customer:
+        try:
+            db.delete(customer)
+            db.commit()
+
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise e
+
+    return customer
+
+
 def create_prediction(db: Session, prediction: Prediction):
     """
     Save prediction into database.
