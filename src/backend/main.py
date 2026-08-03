@@ -7,10 +7,13 @@ from fastapi import FastAPI, Depends, HTTPException, Query
 
 from sqlalchemy.orm import Session
 
-from backend import crud
-from backend.config import APP_NAME, APP_VERSION
-from backend.database import get_db, Base, engine
-from backend.model_loader import load_model
+from src.backend import crud
+from src.backend.models import Customer
+from src.schemas.customer import Customer as CustomerSchema
+
+from src.backend.config import APP_NAME, APP_VERSION
+from src.backend.database import get_db, Base, engine
+from src.backend.model_loader import load_model
 
 
 logging.basicConfig(level=logging.INFO)
@@ -30,7 +33,6 @@ def startup():
     Load ML model when backend starts.
     """
     load_model()
-
 
 
 @app.get("/")
@@ -74,56 +76,33 @@ def get_customers(db: Session = Depends(get_db)):
     return crud.get_all_customers(db)
 
 
-@app.get("/customers/{customer_id}")
-def get_customer(customer_id: str,
-                 db: Session = Depends(get_db)):
+@app.post("/customers")
+def create_customer(
+    customer: CustomerSchema,
+    db: Session = Depends(get_db)
+):
     """
-    Retrieve customer by customerID.
+    Create a new customer.
     """
-
-    customer = crud.get_customer_by_id(
+    if crud.customer_exists(
         db,
-        customer_id
-    )
-
-    if not customer:
+        customer.customerID
+    ):
         raise HTTPException(
-            status_code=404,
-            detail="Customer not found"
+            status_code=400,
+            detail="Customer already exists"
         )
-
-    return customer
-
-
-@app.get("/predictions")
-def get_predictions(db: Session = Depends(get_db)):
-    """
-    Retrieve all predictions.
-    """
-    return crud.get_all_predictions(db)
-
-
-@app.get("/predictions/{customer_id}")
-def get_customer_predictions(customer_id: str,db: Session = Depends(get_db)):
-    """
-    Retrieve prediction history for one customer.
-    """
-    predictions = crud.get_predictions_by_customer(
+    db_customer = Customer(
+        **customer.model_dump()
+    )
+    return crud.create_customer(
         db,
-        customer_id
+        db_customer
     )
-    if not predictions:
-        raise HTTPException(
-            status_code=404,
-            detail="No predictions found"
-        )
-    return predictions
 
 
 @app.get("/customers/paginated")
-def get_customers_paginated(skip: int = Query(0), limit: int = Query(20),
-    db: Session = Depends(get_db)
-):
+def get_customers_paginated(skip: int = Query(0), limit: int = Query(20), db: Session = Depends(get_db)):
     return crud.get_customers_paginated(
         db,
         skip,
@@ -151,3 +130,74 @@ def get_customers_by_internet(
         db,
         service
     )
+
+
+@app.get("/customers/{customer_id}")
+def get_customer(customer_id: str,
+                 db: Session = Depends(get_db)):
+    """
+    Retrieve customer by customerID.
+    """
+
+    customer = crud.get_customer_by_id(
+        db,
+        customer_id
+    )
+
+    if not customer:
+        raise HTTPException(
+            status_code=404,
+            detail="Customer not found"
+        )
+
+    return customer
+
+
+@app.delete("/customers/{customer_id}")
+def delete_customer(
+    customer_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Delete customer.
+    """
+
+    customer = crud.delete_customer(
+        db,
+        customer_id
+    )
+
+    if not customer:
+        raise HTTPException(
+            status_code=404,
+            detail="Customer not found"
+        )
+
+    return {
+        "message": "Customer deleted successfully"
+    }
+
+
+@app.get("/predictions")
+def get_predictions(db: Session = Depends(get_db)):
+    """
+    Retrieve all predictions.
+    """
+    return crud.get_all_predictions(db)
+
+
+@app.get("/predictions/{customer_id}")
+def get_customer_predictions(customer_id: str, db: Session = Depends(get_db)):
+    """
+    Retrieve prediction history for one customer.
+    """
+    predictions = crud.get_predictions_by_customer(
+        db,
+        customer_id
+    )
+    if not predictions:
+        raise HTTPException(
+            status_code=404,
+            detail="No predictions found"
+        )
+    return predictions
