@@ -6,7 +6,7 @@ Loads the trained ML model.
 import pickle
 import logging
 
-from backend.config import MODEL_PATH
+from src.backend.config import MODEL_PATH
 
 logger = logging.getLogger(__name__)
 

@@ -9,10 +9,6 @@ from src.backend.models import Customer, Prediction
 from sqlalchemy.exc import SQLAlchemyError
 
 
-# ==========================================
-# CUSTOMER OPERATIONS
-# ==========================================
-
 def create_customer(db: Session, customer: Customer):
     """
     Add a new customer to the database.
@@ -22,6 +18,7 @@ def create_customer(db: Session, customer: Customer):
         db.commit()
         db.refresh(customer)
         return customer
+
     except SQLAlchemyError as e:
         db.rollback()
         raise e
@@ -56,11 +53,13 @@ def customer_exists(db: Session, customer_id: str) -> bool:
     """
     Check whether a customer exists.
     """
+
     customer = (
         db.query(Customer)
         .filter(Customer.customerID == customer_id)
         .first()
     )
+
     return customer is not None
 
 
@@ -75,10 +74,15 @@ def get_customers_by_tenure(db: Session):
     )
 
 
-def update_customer(db: Session, customer_id: str, updated_data: dict):
+def update_customer(
+    db: Session,
+    customer_id: str,
+    updated_data: dict
+):
     """
     Update customer information.
     """
+
     customer = (
         db.query(Customer)
         .filter(Customer.customerID == customer_id)
@@ -94,6 +98,7 @@ def update_customer(db: Session, customer_id: str, updated_data: dict):
 
         db.commit()
         db.refresh(customer)
+
         return customer
 
     except SQLAlchemyError as e:
@@ -105,59 +110,24 @@ def delete_customer(db: Session, customer_id: str):
     """
     Delete a customer by customerID.
     """
+
     customer = (
         db.query(Customer)
         .filter(Customer.customerID == customer_id)
         .first()
     )
+
     if customer:
         try:
             db.delete(customer)
             db.commit()
+
         except SQLAlchemyError as e:
             db.rollback()
             raise e
 
     return customer
 
-
-def get_customers_paginated(db: Session, skip: int = 0, limit: int = 20):
-    """
-    Return customers using pagination.
-    """
-    return (
-        db.query(Customer)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
-
-
-def get_customers_by_contract(db: Session, contract: str):
-    """
-    Return customers with given contract type.
-    """
-    return (
-        db.query(Customer)
-        .filter(Customer.Contract == contract)
-        .all()
-    )
-
-
-def get_customers_by_internet_service(db: Session, service: str):
-    """
-    Return customers using given internet service.
-    """
-    return (
-        db.query(Customer)
-        .filter(Customer.InternetService == service)
-        .all()
-    )
-
-
-# ==========================================
-# PREDICTION OPERATIONS
-# ==========================================
 
 def create_prediction(db: Session, prediction: Prediction):
     """
@@ -209,11 +179,60 @@ def delete_prediction(db: Session, customer_id: str):
         .first()
     )
     if prediction:
+
         try:
             db.delete(prediction)
             db.commit()
+
         except SQLAlchemyError as e:
             db.rollback()
             raise e
 
     return prediction
+
+
+def get_customers_paginated(
+    db: Session,
+    skip: int = 0,
+    limit: int = 20
+):
+    """
+    Return customers using pagination.
+    """
+
+    return (
+        db.query(Customer)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def get_customers_by_contract(
+    db: Session,
+    contract: str
+):
+    """
+    Return customers with given contract type.
+    """
+
+    return (
+        db.query(Customer)
+        .filter(Customer.Contract == contract)
+        .all()
+    )
+
+
+def get_customers_by_internet_service(
+    db: Session,
+    service: str
+):
+    """
+    Return customers using given internet service.
+    """
+
+    return (
+        db.query(Customer)
+        .filter(Customer.InternetService == service)
+        .all()
+    )
