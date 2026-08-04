@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from backend.database import Base
+from src.backend.database import Base
 
 
 class Customer(Base):
@@ -48,6 +48,23 @@ class Customer(Base):
     MonthlyCharges = Column(Float)
 
     TotalCharges = Column(Float)
+
+    MultipleLines = Column(String(30))
+
+    OnlineSecurity = Column(String(30))
+
+    OnlineBackup = Column(String(30))
+
+    DeviceProtection = Column(String(30))
+
+    TechSupport = Column(String(30))
+
+    StreamingTV = Column(String(30))
+
+    StreamingMovies = Column(String(30))
+
+    PaperlessBilling = Column(String(5))
+
 
     # Relationship with Prediction table
     predictions = relationship(

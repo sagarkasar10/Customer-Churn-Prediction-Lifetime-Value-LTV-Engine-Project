@@ -23,7 +23,7 @@ def train_baseline():
     print(f"Intercept: {baseline_model.intercept_:.4f}")
 
     # 4. Pickle artifact
-    model_path = os.path.join("ml", "baseline_regressor.pkl")
+    model_path = os.path.join("src/ml", "baseline_regressor.pkl")
     with open(model_path, "wb") as f:
         pickle.dump(baseline_model, f)
 

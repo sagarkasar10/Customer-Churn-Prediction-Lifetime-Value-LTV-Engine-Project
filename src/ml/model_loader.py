@@ -12,7 +12,7 @@ class ModelRegistry:
             cls._instance.classifier = None
         return cls._instance
 
-    def load_models(self, model_dir: str = "ml") -> None:
+    def load_models(self, model_dir: str = "src/ml") -> None:
         """Loads serialized machine learning models into memory cache."""
         ensemble_path = os.path.join(model_dir, "ensemble_regressor.pkl")
         baseline_path = os.path.join(model_dir, "baseline_regressor.pkl")
