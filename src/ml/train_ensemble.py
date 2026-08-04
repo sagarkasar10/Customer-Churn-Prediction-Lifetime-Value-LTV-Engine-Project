@@ -1,7 +1,7 @@
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from prepare_data import get_processed_data
-
+import os
 
 def train_ensemble():
     print("--- Training Ensemble Random Forest ---")
@@ -22,7 +22,7 @@ def train_ensemble():
     print(f"Test score (R²): {ensemble_model.score(X_test, y_test):.4f}")
 
     # 3. Pickle artifact
-    model_path = "ensemble_regressor.pkl"
+    model_path = os.path.join("ml", "ensemble_regressor.pkl")
     with open(model_path, "wb") as f:
         pickle.dump(ensemble_model, f)
 
