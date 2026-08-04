@@ -153,6 +153,31 @@ def get_customer(customer_id: str,
     return customer
 
 
+@app.put("/customers/{customer_id}")
+def update_customer(
+    customer_id: str,
+    customer: CustomerSchema,
+    db: Session = Depends(get_db)
+):
+    """
+    Update customer details.
+    """
+
+    updated_customer = crud.update_customer(
+        db,
+        customer_id,
+        customer.model_dump()
+    )
+
+    if not updated_customer:
+        raise HTTPException(
+            status_code=404,
+            detail="Customer not found"
+        )
+
+    return updated_customer
+
+
 @app.delete("/customers/{customer_id}")
 def delete_customer(
     customer_id: str,
