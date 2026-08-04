@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from src.schemas.customer import CustomerInput
+from src.schemas.customer import Customer
 from src.schemas.predictions import SinglePredictionOutput
 from src.ml.model_loader import model_registry
 from src.ml.inference_engine import compute_predictive_ltv
@@ -36,7 +36,7 @@ router = APIRouter(prefix="/predict", tags=["Predictions"])
         500: {"description": "Internal Server Error — Prediction model inference failure."}
     }
 )
-def predict_single(payload: CustomerInput):
+def predict_single(payload: Customer):
     # Auto-load models if not yet loaded in registry
     if model_registry.regressor is None:
         model_registry.load_models()
