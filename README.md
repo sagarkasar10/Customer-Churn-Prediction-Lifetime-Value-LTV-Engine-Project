@@ -22,12 +22,24 @@ can be prioritized by expected revenue impact.
 ### Model Evaluation
 ### SHAP Explainability
 
-## Current Project Status
+## Running the training pipeline
 
-Week 1: Completed  
+```bash
+pip install -r requirements.txt
+python main.py
+```
 
-Week 2: Completed  
+This runs EDA, cleans and feature-engineers the data, trains and
+evaluates Logistic Regression / Random Forest / XGBoost classifiers
+plus SHAP explainability, trains the baseline and ensemble LTV
+regressors.
 
-Week 3: Completed
+## Running the API
 
-Week 4: Completed  
+```bash
+uvicorn src.api.main:app --reload
+```
+
+Then see `http://127.0.0.1:8000/docs` for interactive API docs, or
+`docs/api_specs.md`.
+
