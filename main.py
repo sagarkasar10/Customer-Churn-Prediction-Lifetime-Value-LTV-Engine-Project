@@ -1,3 +1,5 @@
+import os
+import joblib
 import pandas as pd
 from eda import run_eda
 from Preprocessing import preprocessing_data
@@ -94,7 +96,7 @@ def main():
 
         print("\nScaling data...")
 
-        X_train, X_test = data_scaling(X_train, X_test)
+        X_train, X_test, scaler = data_scaling(X_train, X_test)
 
 
         # Model Training and Evaluation
@@ -171,7 +173,15 @@ def main():
 
         shap_summary_plot(shap_values, X_train)
 
+        print("\nExporting classifier + scaler for the API...")
 
+        os.makedirs("src/ml", exist_ok=True)
+        joblib.dump(xgboost_model, os.path.join("src/ml", "churn_classifier.pkl"))
+        joblib.dump(scaler, os.path.join("src/ml", "feature_scaler.pkl"))
+
+        print("Saved src/ml/churn_classifier.pkl and src/ml/feature_scaler.pkl")
+
+        
         # PIPELINE COMPLETED
 
         print("\n========================================")
