@@ -17,7 +17,11 @@ from src.backend.model_loader import load_model
 
 
 logging.basicConfig(level=logging.INFO)
-Base.metadata.create_all(bind=engine)
+
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    logging.error(f"Could not initialize database schema: {e}")
 
 # Initialize FastAPI application
 app = FastAPI(
