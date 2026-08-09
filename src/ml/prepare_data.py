@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from sqlalchemy import create_engine, text
 from sklearn.model_selection import train_test_split
 
 # Get path relative to the project root
@@ -20,6 +21,21 @@ def process_raw_data(file_path=DATA_PATH):
     # Handle missing/space values in TotalCharges
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"].str.strip(), errors="coerce")
     df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
+
+    # 1. Database Connection URL
+    DB_URL = "postgresql://postgres:postTiya@localhost:5432/customer_churn"
+
+    # 3. Connect and bulk upload to PostgreSQL
+    engine = create_engine(DB_URL)
+
+    with engine.begin() as conn:
+        conn.execute(text('ALTER TABLE customers ADD COLUMN IF NOT EXISTS "Churn" VARCHAR(10);'))
+    
+    print("Uploading data to PostgreSQL database...")
+    # 'append' pushes all rows into the existing 'customers' table without deleting structure
+    df.to_sql('customers', con=engine, if_exists='append', index=False)
+    
+    print(f"SUCCESS: Uploaded {len(df)} rows into the 'customers' table!")
 
     # Target variable calculation
     df["HistoricalRevenue"] = df["tenure"] * df["MonthlyCharges"]

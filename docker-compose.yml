@@ -4,8 +4,6 @@ version: '3.8'
 services:
   db:
     image: postgres:14-alpine
-    build:
-      context: ./db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postTiya
@@ -16,6 +14,22 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - churn_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - churn_network
+
 
   api:
     build:
@@ -24,22 +38,13 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:postTiya@db:5432/customer_churn
     networks:
       - churn_network
-
-  metabase:
-    image: metabase/metabase:latest
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    networks:
-      - churn_network
   
-
 volumes:
   pgdata:
 

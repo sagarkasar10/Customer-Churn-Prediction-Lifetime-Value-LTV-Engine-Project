@@ -65,6 +65,8 @@ class Customer(Base):
 
     PaperlessBilling = Column(String(5))
 
+    Churn = Column(String(5))
+
 
     # Relationship with Prediction table
     predictions = relationship(
