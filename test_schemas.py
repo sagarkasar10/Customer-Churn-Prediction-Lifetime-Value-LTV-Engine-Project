@@ -6,6 +6,7 @@ from src.schemas.customer import Customer
 
 def valid_customer():
     return {
+        "customerID": "0001-TEST",
         "gender": "Male",
         "SeniorCitizen": 0,
         "Partner": "Yes",
