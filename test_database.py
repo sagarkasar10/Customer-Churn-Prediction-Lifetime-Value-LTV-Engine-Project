@@ -1,12 +1,12 @@
 from src.backend.database import SessionLocal
-
+from sqlalchemy import text
 
 def test_database_connection():
 
     db = SessionLocal()
 
     try:
-        result = db.execute("SELECT 1")
+        result = db.execute(text("SELECT 1"))
         assert result.scalar() == 1
 
     finally:
@@ -19,4 +19,4 @@ def test_session_close():
 
     db.close()
 
-    assert db.is_active is False or True
+    assert db.is_active is False
