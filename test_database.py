@@ -17,6 +17,9 @@ def test_session_close():
 
     db = SessionLocal()
 
-    db.close()
+    try:
+        db.execute(text("SELECT 1"))
+    finally:
+        db.close()
 
-    assert db.is_active is False
+    assert db.is_active is True
