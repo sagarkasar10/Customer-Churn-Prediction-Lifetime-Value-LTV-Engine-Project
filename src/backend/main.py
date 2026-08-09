@@ -15,6 +15,8 @@ from src.backend.config import APP_NAME, APP_VERSION
 from src.backend.database import get_db, Base, engine
 from src.backend.model_loader import load_model
 from src.routers import single_predict
+from Batch_API import router as batch_predict_router
+from src.ml.model_loader import model_registry
 
 
 logging.basicConfig(level=logging.INFO)
@@ -31,6 +33,8 @@ app = FastAPI(
     version=APP_VERSION,
 )
 
+app.include_router(single_predict.router)
+app.include_router(batch_predict_router)
 
 @app.on_event("startup")
 def startup():
@@ -38,6 +42,7 @@ def startup():
     Load ML model when backend starts.
     """
     load_model()
+    model_registry.load_models()
 
 
 @app.get("/")
@@ -232,4 +237,4 @@ def get_customer_predictions(customer_id: str, db: Session = Depends(get_db)):
         )
     return predictions
 
-app.include_router(single_predict.router)
+
