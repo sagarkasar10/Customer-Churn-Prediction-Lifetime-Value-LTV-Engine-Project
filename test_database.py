@@ -1,4 +1,4 @@
-from app.database import SessionLocal
+from src.backend.database import SessionLocal
 
 
 def test_database_connection():

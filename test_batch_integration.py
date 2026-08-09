@@ -1,6 +1,7 @@
-def customer():
+def customer(customer_id):
 
     return {
+        "customerID": customer_id,
         "gender":"Male",
         "SeniorCitizen":0,
         "Partner":"Yes",
@@ -25,11 +26,13 @@ def customer():
 
 def test_batch_prediction(client):
 
-    payload = [
-        customer(),
-        customer(),
-        customer()
-    ]
+    payload = {
+        "customers": [
+            customer("0003-TEST"),
+            customer("0004-TEST"),
+            customer("0005-TEST")
+        ]
+    }
 
     response = client.post(
         "/predict/batch",
@@ -38,7 +41,8 @@ def test_batch_prediction(client):
 
     assert response.status_code == 200
 
-    predictions = response.json()
+    body = response.json()
+    predictions = body["predictions"]
 
     assert len(predictions) == 3
 
