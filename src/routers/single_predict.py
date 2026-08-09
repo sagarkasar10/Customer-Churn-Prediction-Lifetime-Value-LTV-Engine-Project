@@ -46,6 +46,7 @@ def predict_single(payload: Customer):
     try:
         churn_prob, ltv, risk = compute_predictive_ltv(
             client_features=customer_dict,
+            classifier_model=model_registry.classifier,
             regressor_model=model_registry.regressor
         )
         return SinglePredictionOutput(
