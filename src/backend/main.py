@@ -14,6 +14,7 @@ from src.schemas.customer import Customer as CustomerSchema
 from src.backend.config import APP_NAME, APP_VERSION
 from src.backend.database import get_db, Base, engine
 from src.backend.model_loader import load_model
+from src.routers import single_predict
 
 
 logging.basicConfig(level=logging.INFO)
@@ -230,3 +231,5 @@ def get_customer_predictions(customer_id: str, db: Session = Depends(get_db)):
             detail="No predictions found"
         )
     return predictions
+
+app.include_router(single_predict.router)

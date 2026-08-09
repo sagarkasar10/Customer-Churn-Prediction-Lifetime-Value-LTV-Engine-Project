@@ -2,14 +2,18 @@ from typing import List
 from pydantic import BaseModel
 import asyncio 
 from functools import partial
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 router = APIRouter()
 from src.backend.crud import create_prediction 
+from src.schemas.customer import Customer
+from src.ml.model_loader import model_registry
+from src.ml.inference_engine import compute_predictive_ltv
 import pandas as pd
 import numpy as np
 import time
 
 class CustomerData(BaseModel):
+    customerID: str
     gender: str 
     senior_citizen: int
     partner: str
@@ -47,33 +51,44 @@ async def run_batch(customers,predict_func):
     return await asyncio.gather(*tasks)
 
 
+def _predict_one(customer: Customer) -> dict:
+   
+    churn_prob, ltv, risk = compute_predictive_ltv(
+        client_features=customer.model_dump(),
+        classifier_model=model_registry.classifier,
+        regressor_model=model_registry.regressor,
+        scaler=model_registry.scaler,
+    )
+    return {
+        "customerID": customer.customerID,
+        "churn_probability": churn_prob,
+        "predicted_ltv": ltv,
+        "risk_tier": risk,
+    }
 
 
 @router.post("/predict/batch")
 async def predict_batch(request: BatchPredictionRequest):
 
-    predictions = []
+    # Auto-load models if not yet loaded in registry (mirrors
+    # src/routers/single_predict.py's startup-safety check)
+    if model_registry.classifier is None:
+        model_registry.load_models()
 
-    for customer in request.customers:
-        prediction = {
-            "customerID": customer.customerID,
-            "churn_probability": 0.35,
-            "predicted_ltv": 1500.0,
-            "risk_tier": "Medium"
-        }
+    try:
+        predictions = await run_batch(request.customers, _predict_one)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Batch prediction calculation failed: {str(exc)}"
+        )
 
-        # TODO: SAVE PREDICTION TO DATABASE USING MEMBER 2'S CRUD FUNCTION
-        # save_prediction(prediction)  # Save each prediction to the database
-
-        predictions.append(prediction)
 
     return {
         "message": "Batch prediction completed successfully",
         "total_customers": len(predictions),
         "predictions": predictions
     }
-
-
 
 
 def vectorized_batch_processing(df: pd.DataFrame):
