@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas import CustomerInput
+from src.schemas.customer import Customer
 
 
 def valid_customer():
@@ -30,7 +30,7 @@ def valid_customer():
 
 def test_valid_schema():
 
-    customer = CustomerInput(**valid_customer())
+    customer = Customer(**valid_customer())
 
     assert customer.tenure == 12
 
@@ -41,7 +41,7 @@ def test_invalid_tenure():
     data["tenure"] = -1
 
     with pytest.raises(ValidationError):
-        CustomerInput(**data)
+        Customer(**data)
 
 
 def test_invalid_monthly_charge():
@@ -50,7 +50,7 @@ def test_invalid_monthly_charge():
     data["MonthlyCharges"] = "abc"
 
     with pytest.raises(ValidationError):
-        CustomerInput(**data)
+        Customer(**data)
 
 
 def test_missing_field():
@@ -59,4 +59,4 @@ def test_missing_field():
     del data["Contract"]
 
     with pytest.raises(ValidationError):
-        CustomerInput(**data)
+        Customer(**data)

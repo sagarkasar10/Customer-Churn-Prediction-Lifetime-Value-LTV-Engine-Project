@@ -1,6 +1,7 @@
 def sample_payload():
 
     return {
+        "customerID": "0002-TEST",
         "gender":"Male",
         "SeniorCitizen":0,
         "Partner":"Yes",

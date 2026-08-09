@@ -11,7 +11,7 @@ test:
 	pytest -v
 
 coverage:
-	pytest --cov=app --cov-report=html
+	pytest --cov=src --cov-report=html
 
 all:
 	make format

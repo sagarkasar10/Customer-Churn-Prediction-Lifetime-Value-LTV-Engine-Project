@@ -79,12 +79,11 @@ def vectorized_batch_processing(df: pd.DataFrame):
     # Vectorized Risk Tier
     df["risk_tier"] = np.select(
         [
-            df["ChurnProbability"] < 0.3,
-            (df["ChurnProbability"] >= 0.3) & (df["ChurnProbability"] < 0.7),
-            df["ChurnProbability"] >= 0.7
+            df["ChurnProbability"] > 0.7,
+            df["ChurnProbability"] > 0.4
         ],
-        ["Low", "Medium", "High"],
-        default="Unknown"
+        ["High", "Medium"],
+        default="Low"
     )
 
     return df

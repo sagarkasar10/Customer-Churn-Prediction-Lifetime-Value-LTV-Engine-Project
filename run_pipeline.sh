@@ -14,7 +14,7 @@ flake8 .
 
 echo ""
 echo "Step 3: Training Baseline Model..."
-python src/ml/train_baseline.py
+python src/ml/baseline.py
 
 echo ""
 echo "Step 4: Training Ensemble Model..."
@@ -30,7 +30,7 @@ pytest
 
 echo ""
 echo "Step 7: Generating Coverage Report..."
-pytest --cov=app --cov-report=html
+pytest --cov=src --cov-report=html
 
 echo ""
 echo "======================================"
