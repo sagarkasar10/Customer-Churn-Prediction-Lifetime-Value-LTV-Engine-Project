@@ -27,7 +27,7 @@ docker-compose up -d metabase
 ## Running the API
 
 ```bash
-uvicorn src.api.main:app --reload
+uvicorn src.backend.main:app --reload
 ```
 
 Then see `http://127.0.0.1:8000/docs` for interactive API docs
