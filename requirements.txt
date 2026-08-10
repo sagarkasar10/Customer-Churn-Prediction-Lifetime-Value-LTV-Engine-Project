@@ -1,0 +1,28 @@
+# Unified project dependencies.
+
+# Data & ML
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+xgboost>=2.0
+shap>=0.44
+joblib>=1.3
+matplotlib>=3.7
+seaborn>=0.13
+
+# API
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.5
+
+# Database
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+python-dotenv>=1.0
+
+# Testing & tooling
+pytest>=8.0
+pytest-cov>=4.1
+httpx>=0.27
+black>=24.0
+flake8>=7.0

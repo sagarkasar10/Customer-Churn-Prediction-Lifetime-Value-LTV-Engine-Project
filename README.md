@@ -5,23 +5,6 @@ Predicts which customers are at risk of churning and estimates each
 customer's predictive Lifetime Value (LTV), so retention campaigns
 can be prioritized by expected revenue impact.
 
-## 2. Week 1 – Data Ingestion & EDA
-
-### Data Source
-### Data Preprocessing
-### Exploratory Data Analysis
-### Key EDA Findings
-### Baseline Analytics
-
-## 3. Week 2 – Feature Engineering & Predictive Modeling
-
-### Feature Engineering
-### Logistic Regression
-### Random Forest
-### XGBoost
-### Model Evaluation
-### SHAP Explainability
-
 ## Running the training pipeline
 
 ```bash
@@ -34,12 +17,24 @@ evaluates Logistic Regression / Random Forest / XGBoost classifiers
 plus SHAP explainability, trains the baseline and ensemble LTV
 regressors.
 
+## Running with Docker
+
+```bash
+docker-compose up -d db
+docker-compose up -d metabase
+```
+
 ## Running the API
 
 ```bash
 uvicorn src.api.main:app --reload
 ```
 
-Then see `http://127.0.0.1:8000/docs` for interactive API docs, or
-`docs/api_specs.md`.
+Then see `http://127.0.0.1:8000/docs` for interactive API docs
+Then see `http://127.0.0.1:3000` for Metabase
 
+## Running tests
+
+```bash
+pytest -v
+```
