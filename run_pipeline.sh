@@ -20,16 +20,13 @@ echo ""
 echo "Step 4: Training Ensemble Model..."
 python src/ml/train_ensemble.py
 
-echo ""
-echo "Step 5: Exporting Models..."
-python src/ml/export_models.py
 
 echo ""
-echo "Step 6: Running Unit Tests..."
+echo "Step 5: Running Unit Tests..."
 pytest
 
 echo ""
-echo "Step 7: Generating Coverage Report..."
+echo "Step 6: Generating Coverage Report..."
 pytest --cov=src --cov-report=html
 
 echo ""

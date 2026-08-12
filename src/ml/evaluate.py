@@ -9,10 +9,10 @@ from prepare_data import get_processed_data
 X_train, X_test, y_train, y_test = get_processed_data()
 
 # ---- Load trained models ----
-with open("models/baseline_regressor.pkl", "rb") as f:
+with open("src/ml/baseline_regressor.pkl", "rb") as f:
     baseline_model = pickle.load(f)
 
-with open("models/ensemble_regressor.pkl", "rb") as f:
+with open("src/ml/ensemble_regressor.pkl", "rb") as f:
     ensemble_model = pickle.load(f)
 
 # ---- Baseline model evaluation ----
