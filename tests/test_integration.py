@@ -3,6 +3,7 @@ import joblib
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import sys
+from encoding import encode_target_and_categoricals
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -45,11 +46,7 @@ def test_integration():
     # ----------------------------
     # Encode Target
     # ----------------------------
-    if "Churn" in df.columns:
-        df["Churn"] = df["Churn"].map({
-            "Yes": 1,
-            "No": 0
-        })
+    clean_df = encode_target_and_categoricals(df)
 
     # ----------------------------
     # One Hot Encoding
@@ -58,12 +55,6 @@ def test_integration():
         col for col in df.select_dtypes(include=["object","string", "category"]).columns
         if col not in ["customerID", "Churn"]
     ]
-
-    clean_df = pd.get_dummies(
-        df,
-        columns=categorical_cols,
-        drop_first=True
-    )
 
     # ----------------------------
     # Prepare Features
@@ -96,10 +87,12 @@ def test_integration():
     # Load Model
     # ----------------------------
     model_path = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "best_logistic_regression_model.pkl"
-    )
+    os.path.dirname(__file__),
+    "..",
+    "src",
+    "ml",
+    "churn_classifier.pkl"
+)
 
     model = joblib.load(model_path)
 

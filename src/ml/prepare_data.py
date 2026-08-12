@@ -2,6 +2,10 @@ import os
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sklearn.model_selection import train_test_split
+from dotenv import load_dotenv
+from encoding import encode_target_and_categoricals
+
+load_dotenv()
 
 # Get path relative to the project root
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -23,7 +27,7 @@ def process_raw_data(file_path=DATA_PATH):
     df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
 
     # 1. Database Connection URL
-    DB_URL = "postgresql://postgres:postTiya@localhost:5432/customer_churn"
+    DB_URL = os.getenv("DATABASE_URL")
 
     # 3. Connect and bulk upload to PostgreSQL
     engine = create_engine(DB_URL)
@@ -45,12 +49,8 @@ def process_raw_data(file_path=DATA_PATH):
         df = df.drop(columns=["customerID"])
 
     # Encode target variable
-    if "Churn" in df.columns:
-        df["Churn"] = df["Churn"].map({"No": 0, "Yes": 1})
-
-    # One-hot encoding for categorical variables
-    df = pd.get_dummies(df, drop_first=True)
-
+    df = encode_target_and_categoricals(df)
+    
     # Train / Test split
     X = df.drop(columns=["HistoricalRevenue"])
     y = df["HistoricalRevenue"]
