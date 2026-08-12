@@ -13,3 +13,6 @@ __pycache__/
 *.pkl
 train_processed.csv
 test_processed.csv
+
+# EDA charts
+eda_charts/
