@@ -23,11 +23,12 @@ def feature_importance_plot(rf, X_train):
     print(importances.head(10))
 
     plt.figure(figsize=(8, 6))
-    importances.head(15).sort_values().plot(kind="barh")
+    importances.head(15).sort_values().plot(kind="barh", dpi=150, show=False)
     plt.title("Random Forest - Top Feature Importances")
     plt.xlabel("Importance")
     plt.tight_layout()
-    plt.show()
+    plt.savefig("eda_charts/random_forest_feature_importances.png")
+    plt.close()
 
 # ---- 3. Evaluation implementation ----
 def evaluate_model(model, X_test, y_test, label="Model"):
