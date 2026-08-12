@@ -1,6 +1,19 @@
+import os
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+EDA_CHARTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eda_charts")
+
+
+def _finish_plot(filename: str, show: bool = False):
+    os.makedirs(EDA_CHARTS, exist_ok=True)
+    plt.tight_layout()
+    plt.savefig(os.path.join(EDA_CHARTS, filename), dpi=150)
+    if show:
+        plt.show()
+    plt.close()
 
 def dataset_overview(df):
     """
@@ -46,7 +59,7 @@ def missing_value_analysis(df):
 
     print("\nTotal Missing Values:", df.isnull().sum().sum())
 
-def churn_distribution(df):
+def churn_distribution(df, show=False):
     """
     Analyze the distribution of customers who churned
     and customers who did not churn.
@@ -76,11 +89,10 @@ def churn_distribution(df):
     plt.xlabel("Churn")
     plt.ylabel("Number of Customers")
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("churn_distribution.png", show)
 
 
-def contract_vs_churn(df):
+def contract_vs_churn(df, show=False):
     """
     Analyze the relationship between contract type and churn.
     """
@@ -112,10 +124,9 @@ def contract_vs_churn(df):
 
     plt.xticks(rotation=15)
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("contract_vs_churn.png", show)
 
-def tenure_vs_churn(df):
+def tenure_vs_churn(df, show=False):
     """
     Analyze the relationship between customer tenure
     and churn.
@@ -144,11 +155,10 @@ def tenure_vs_churn(df):
     plt.title("Customer Tenure vs Churn")
     plt.xlabel("Churn")
     plt.ylabel("Tenure (Months)")
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("tenure_vs_churn.png", show)
 
 
-def tenure_cohort_vs_churn(df):
+def tenure_cohort_vs_churn(df, show=False):
 
     """
     Group customers into tenure cohorts and analyze
@@ -192,10 +202,9 @@ def tenure_cohort_vs_churn(df):
     plt.title("Tenure Cohort vs Customer Churn")
     plt.xlabel("Tenure Cohort")
     plt.ylabel("Number of Customers")
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("tenure_cohort_vs_churn.png", show)
 
-def monthly_charges_vs_churn(df):
+def monthly_charges_vs_churn(df, show=False):
     """
     Analyze the relationship between monthly charges
     and customer churn.
@@ -228,11 +237,10 @@ def monthly_charges_vs_churn(df):
     plt.xlabel("Churn")
     plt.ylabel("Monthly Charges")
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("monthly_charges_vs_churn.png", show)
 
 
-def payment_method_vs_churn(df):
+def payment_method_vs_churn(df, show=False):
     """
     Analyze the relationship between payment method
     and customer churn.
@@ -269,10 +277,9 @@ def payment_method_vs_churn(df):
 
     plt.xticks(rotation=30, ha="right")
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("payment_method_vs_churn.png", show)
 
-def internet_service_vs_churn(df):
+def internet_service_vs_churn(df, show=False):
     """
     Analyze the relationship between internet service
     type and customer churn.
@@ -307,11 +314,10 @@ def internet_service_vs_churn(df):
     plt.xlabel("Internet Service")
     plt.ylabel("Number of Customers")
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("internet_service_vs_churn.png", show)
 
 
-def numerical_correlation_analysis(df):
+def numerical_correlation_analysis(df, show=False):
     """
     Analyze correlations between numerical variables.
     """
@@ -341,8 +347,7 @@ def numerical_correlation_analysis(df):
 
     plt.title("Numerical Features Correlation Heatmap")
 
-    plt.tight_layout()
-    plt.show()
+    _finish_plot("numerical_correlation_heatmap.png", show)
 
 
 def generate_baseline_summary(df):
@@ -376,10 +381,13 @@ def generate_baseline_summary(df):
     print("\nBaseline analytics generated successfully.")
 
 
-def run_eda(df):
+def run_eda(df, show=False):
     """
-    Run the complete Week 1 EDA pipeline.
+    Run the complete Week 1 EDA pipeline. Charts are saved to eda_charts/;
+    pass show=True to also display them interactively.
     """
+    if not show:
+        matplotlib.use("Agg", force=True)
 
     print("\n")
     print("=" * 60)
@@ -390,24 +398,24 @@ def run_eda(df):
 
     missing_value_analysis(df)
 
-    churn_distribution(df)
+    churn_distribution(df, show)
 
-    contract_vs_churn(df)
+    contract_vs_churn(df, show)
 
-    tenure_vs_churn(df)
+    tenure_vs_churn(df, show)
 
-    tenure_cohort_vs_churn(df)
+    tenure_cohort_vs_churn(df, show)
 
-    monthly_charges_vs_churn(df)
+    monthly_charges_vs_churn(df, show)
 
-    payment_method_vs_churn(df)
+    payment_method_vs_churn(df, show)
 
-    internet_service_vs_churn(df)
+    internet_service_vs_churn(df, show)
 
-    numerical_correlation_analysis(df)
+    numerical_correlation_analysis(df, show)
 
     generate_baseline_summary(df)
 
     print("\n" + "=" * 60)
-    print("EDA COMPLETED SUCCESSFULLY")
+    print(f"EDA COMPLETED SUCCESSFULLY — charts saved to {EDA_CHARTS}")
     print("=" * 60)

@@ -8,3 +8,11 @@ __pycache__/
 
 # VS Code
 .vscode/
+
+# All pickle files and processed data
+*.pkl
+train_processed.csv
+test_processed.csv
+
+# EDA charts
+eda_charts/

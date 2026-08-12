@@ -53,9 +53,10 @@ def evaluate_logreg_model(X_test,y_test, y_pred, best_model, grid_search):
 
     #displaying confusion matrix
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-    disp.plot(cmap=plt.cm.Blues)
+    disp.plot(cmap=plt.cm.Blues, dpi=150, show=False)
     plt.title("Logistic Regression Confusion Matrix")
-    # plt.savefig("logistic_regression_confusion_matrix.png")
+    plt.savefig("eda_charts/logistic_regression_confusion_matrix.png")
+    plt.close()
 
     #save the best trained model
     joblib.dump(best_model, "best_logistic_regression_model.pkl")
