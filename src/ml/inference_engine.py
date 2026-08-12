@@ -1,4 +1,5 @@
 import pandas as pd
+from encoding import encode_target_and_categoricals
 
 from feature_services import (
     handle_missing_service_data,
@@ -33,12 +34,8 @@ def _build_feature_row(client_features: dict) -> pd.DataFrame:
     row = create_tenure_cohorts(row)
     row = create_average_monthly_ratio(row)
 
-    categorical_cols = [
-        col for col in row.select_dtypes(include=["object", "category"]).columns
-        if col not in ("customerID", "Churn")
-    ]
-    row = pd.get_dummies(row, columns=categorical_cols, drop_first=True)
-
+    row = encode_target_and_categoricals(row)
+    
     return row
 
 

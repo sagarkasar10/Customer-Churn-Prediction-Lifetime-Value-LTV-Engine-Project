@@ -12,7 +12,7 @@ from xgb_model import train_xgboost_model, evaluation_xgb_model, initialize_shap
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
-
+from encoding import encode_target_and_categoricals
 
 
 # MAIN PIPELINE
@@ -73,19 +73,8 @@ def main():
 
         # 4. TRAIN TEST SPLIT
 
-        # Encode Churn target explicitly (keep separate from feature dummies)
-        feature_df["Churn"] = feature_df["Churn"].map({"Yes": 1, "No": 0})
-
-
-        # Encode categorical feature columns only — exclude ID and target
-        categorical_cols = [
-            col for col in feature_df.select_dtypes(include=['object','category']).columns
-            if col not in ['customerID', 'Churn']
-        ]
-
-        # Create dummy variables for categorical features, dropping the first category to avoid multicollinearity
-        clean_df = pd.get_dummies(feature_df, columns=categorical_cols, drop_first=True)
-
+        clean_df = encode_target_and_categoricals(feature_df)
+        
         # Split the data into training and testing sets
         print("\nSplitting data...")
 
