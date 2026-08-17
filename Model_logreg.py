@@ -53,7 +53,7 @@ def evaluate_logreg_model(X_test,y_test, y_pred, best_model, grid_search):
 
     #displaying confusion matrix
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-    disp.plot(cmap=plt.cm.Blues, dpi=150, show=False)
+    disp.plot(cmap=plt.cm.Blues)
     plt.title("Logistic Regression Confusion Matrix")
     plt.savefig("eda_charts/logistic_regression_confusion_matrix.png")
     plt.close()

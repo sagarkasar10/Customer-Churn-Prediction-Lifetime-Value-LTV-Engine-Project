@@ -52,7 +52,7 @@ def initialize_shap(xgb_model, x_train):
 def shap_summary_plot(shap_values, x_train):
     # Create SHAP summary plot
     print("Generating SHAP summary plot...")
-    shap.summary_plot(shap_values, x_train, plot_type="dot", dpi=150, show=False)
+    shap.summary_plot(shap_values, x_train, plot_type="dot")
     plt.savefig("eda_charts/shap_summary_plot.png")
     plt.close()
     print("SHAP summary plot saved to eda_charts/shap_summary_plot.png")
