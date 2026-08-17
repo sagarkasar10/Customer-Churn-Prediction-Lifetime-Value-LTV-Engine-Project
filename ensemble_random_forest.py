@@ -23,7 +23,7 @@ def feature_importance_plot(rf, X_train):
     print(importances.head(10))
 
     plt.figure(figsize=(8, 6))
-    importances.head(15).sort_values().plot(kind="barh", dpi=150, show=False)
+    importances.head(15).sort_values().plot(kind="barh")
     plt.title("Random Forest - Top Feature Importances")
     plt.xlabel("Importance")
     plt.tight_layout()
